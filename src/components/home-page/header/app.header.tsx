@@ -18,6 +18,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { Avatar } from "@mui/material";
+import Link from "next/link";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -95,8 +96,15 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Link
+          href="profile"
+          style={{ color: "unset", textDecoration: "unset" }}
+        >
+          Profile
+        </Link>
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
     </Menu>
   );
 
@@ -181,11 +189,21 @@ export default function Header() {
                 alignItems: "center",
                 gap: "20px",
                 cursor: "pointer",
+                "> a": {
+                  color: "unset",
+                  textDecoration: "none",
+                },
               }}
             >
-              <span> Play List</span>
-              <span> Likes </span>
-              <span> Upload </span>
+              <Link
+                // style={{ color: "unset", textDecoration: "unset" }}
+                href="/playlist"
+              >
+                {" "}
+                PlayList
+              </Link>
+              <Link href="/likes"> Likes </Link>
+              <Link href="/upload"> Upload </Link>
               <Avatar onClick={handleProfileMenuOpen}>P</Avatar>
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" } }}>
