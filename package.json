@@ -24,8 +24,11 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/react-slick": "0.23.13",
     "eslint": "latest",
     "eslint-config-next": "latest",
+    "react-slick": "0.29.0",
+    "slick-carousel": "1.8.1",
     "typescript": "latest"
   }
 }
