@@ -17,6 +17,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import { Avatar } from "@mui/material";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -87,16 +88,10 @@ export default function Header() {
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
       id={menuId}
       keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
+      transformOrigin={{ horizontal: "right", vertical: "top" }}
+      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
@@ -159,7 +154,7 @@ export default function Header() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ backgroundColor: "#4c5c6c" }}>
         <Container>
           <Toolbar>
             <Typography
@@ -191,18 +186,7 @@ export default function Header() {
               <span> Play List</span>
               <span> Likes </span>
               <span> Upload </span>
-
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+              <Avatar onClick={handleProfileMenuOpen}>P</Avatar>
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" } }}>
               <IconButton
