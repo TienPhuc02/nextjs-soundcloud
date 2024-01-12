@@ -19,6 +19,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { Avatar } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -61,6 +62,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Header() {
+  const router = useRouter();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -72,6 +75,9 @@ export default function Header() {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleRedirectHome = () => {
+    router.push("/");
+  };
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -169,7 +175,8 @@ export default function Header() {
               variant="h6"
               noWrap
               component="div"
-              sx={{ display: { xs: "none", sm: "block" } }}
+              sx={{ display: { xs: "none", sm: "block" }, cursor: "pointer" }}
+              onClick={handleRedirectHome}
             >
               SoundCloud
             </Typography>
@@ -202,7 +209,7 @@ export default function Header() {
                 {" "}
                 PlayList
               </Link>
-              <Link href="/likes"> Likes </Link>
+              <Link href="/like"> Likes </Link>
               <Link href="/upload"> Upload </Link>
               <Avatar onClick={handleProfileMenuOpen}>P</Avatar>
             </Box>
