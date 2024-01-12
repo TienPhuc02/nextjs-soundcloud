@@ -6,6 +6,8 @@ export default function HomePage() {
     <>
       <Container>
         <MainSlider />
+        <MainSlider />
+        <MainSlider />
       </Container>
     </>
   );
