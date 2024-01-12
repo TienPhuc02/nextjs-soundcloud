@@ -1,10 +1,10 @@
-import * as React from 'react';
-
+import Header from "@/components/home-page/header/app.header";
+import * as React from "react";
 
 export default function HomePage() {
   return (
     <>
-    Hello World
+      <Header />
     </>
   );
 }
