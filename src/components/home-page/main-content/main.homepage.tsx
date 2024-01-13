@@ -9,10 +9,13 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Divider from "@mui/material/Divider";
 import { Box } from "@mui/material";
+import Image from "next/image";
 interface IProps {
   data: ITrackTop[];
+  title: string;
 }
-const MainSlider = (props:IProps) => {
+const MainSlider = (props: IProps) => {
+  console.log("🚀 ~ MainSlider ~ props:", props.data);
   const NextArrow = (props: any) => {
     return (
       <Button
@@ -20,11 +23,18 @@ const MainSlider = (props:IProps) => {
         onClick={props.onClick}
         sx={{
           position: "absolute",
+          backgroundColor: "#f2f2f2",
+          color: "black",
+          border: "unset",
           right: 0,
-          top: "50%",
+          top: "30%",
           zIndex: 2,
           minWidth: 30,
           width: 35,
+          ":hover": {
+            border: "unset",
+            backgroundColor: "#f2f2f2",
+          },
         }}
       >
         <ChevronRightIcon />
@@ -39,10 +49,17 @@ const MainSlider = (props:IProps) => {
         onClick={props.onClick}
         sx={{
           position: "absolute",
-          top: "50%",
+          top: "30%",
+          backgroundColor: "#f2f2f2",
+          color: "black",
+          border: "unset",
           zIndex: 2,
           minWidth: 30,
           width: 35,
+          ":hover": {
+            border: "unset",
+            backgroundColor: "#f2f2f2",
+          },
         }}
       >
         <ChevronLeftIcon />
@@ -63,7 +80,7 @@ const MainSlider = (props:IProps) => {
     <Box
       sx={{
         margin: "0 50px",
-        ".abc": {
+        ".track-item": {
           padding: "0 10px",
         },
         h3: {
@@ -71,38 +88,40 @@ const MainSlider = (props:IProps) => {
           padding: "20px",
           height: "200px",
         },
+        // img: {
+        //   height: "200px",
+        //   width: "100px",
+        // },
       }}
     >
-      <h2> Multiple tracks </h2>
+      <h2> {props.title} </h2>
 
       <Slider {...settings}>
-        <div className="abc">
-          <h3>Track 1</h3>
-        </div>
-        <div className="abc">
-          <h3>Track 2</h3>
-        </div>
-        <div className="abc">
-          <h3>Track 3</h3>
-        </div>
-        <div className="abc">
-          <h3>Track 4</h3>
-        </div>
-        <div className="abc">
-          <h3>Track 5</h3>
-        </div>
-        <div className="abc">
-          <h3>Track 6</h3>
-        </div>
-        <div className="abc">
-          <h3>Track 7</h3>
-        </div>
-        <div className="abc">
-          <h3>Track 8</h3>
-        </div>
-        <div className="abc">
-          <h3>Track 9</h3>
-        </div>
+        {props.data.map((track) => {
+          return (
+            <div className="track-item">
+              <img
+                src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track.imgUrl}`}
+                width={200}
+                height={200}
+                alt="Picture of the author"
+              />
+              {/* <h3>Track 1</h3> */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginTop: "20px",
+                }}
+              >
+                <span style={{ color: "#958f8f" }}>{track.title}</span>
+                <span style={{ color: "black", fontWeight: "bold" }}>
+                  {track.description}
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </Slider>
       <Divider />
     </Box>

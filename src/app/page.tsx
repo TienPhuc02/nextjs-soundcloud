@@ -7,7 +7,7 @@ export default async function HomePage() {
     url: "http://localhost:8000/api/v1/tracks/top",
     method: "POST",
     body: {
-      categories: "CHILL",
+      category: "CHILL",
       limit: 10,
     },
   });
@@ -15,7 +15,7 @@ export default async function HomePage() {
     url: "http://localhost:8000/api/v1/tracks/top",
     method: "POST",
     body: {
-      categories: "WORKOUT",
+      category: "WORKOUT",
       limit: 10,
     },
   });
@@ -23,16 +23,16 @@ export default async function HomePage() {
     url: "http://localhost:8000/api/v1/tracks/top",
     method: "POST",
     body: {
-      categories: "PARTY",
+      category: "PARTY",
       limit: 10,
     },
   });
   return (
     <>
       <Container>
-        <MainSlider data={chills?.data ?? []} />
-        <MainSlider data={workouts?.data ?? []} />
-        <MainSlider data={party?.data ?? []} />
+        <MainSlider data={chills?.data ?? []} title={"Chill Tracks"} />
+        <MainSlider data={workouts?.data ?? []} title={"Workout Tracks"} />
+        <MainSlider data={party?.data ?? []} title={"Party Tracks"} />
       </Container>
     </>
   );
