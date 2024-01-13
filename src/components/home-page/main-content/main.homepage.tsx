@@ -10,6 +10,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Divider from "@mui/material/Divider";
 import { Box } from "@mui/material";
 import Image from "next/image";
+import Link from "next/link";
 interface IProps {
   data: ITrackTop[];
   title: string;
@@ -99,14 +100,13 @@ const MainSlider = (props: IProps) => {
       <Slider {...settings}>
         {props.data.map((track) => {
           return (
-            <div className="track-item">
+            <div className="track-item" key={track._id}>
               <img
                 src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track.imgUrl}`}
                 width={200}
                 height={200}
                 alt="Picture of the author"
               />
-              {/* <h3>Track 1</h3> */}
               <div
                 style={{
                   display: "flex",
@@ -114,7 +114,11 @@ const MainSlider = (props: IProps) => {
                   marginTop: "20px",
                 }}
               >
-                <span style={{ color: "#958f8f" }}>{track.title}</span>
+                <Link href={`/track/${track._id}`}>
+                  <span style={{ color: "#958f8f", textDecoration: "unset" }}>
+                    {track.title}
+                  </span>
+                </Link>
                 <span style={{ color: "black", fontWeight: "bold" }}>
                   {track.description}
                 </span>
