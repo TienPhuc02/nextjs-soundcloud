@@ -9,7 +9,10 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Divider from "@mui/material/Divider";
 import { Box } from "@mui/material";
-const MainSlider = () => {
+interface IProps {
+  data: ITrackTop[];
+}
+const MainSlider = (props:IProps) => {
   const NextArrow = (props: any) => {
     return (
       <Button
