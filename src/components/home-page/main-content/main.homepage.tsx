@@ -114,7 +114,7 @@ const MainSlider = (props: IProps) => {
                   marginTop: "20px",
                 }}
               >
-                <Link href={`/track/${track._id}`}>
+                <Link href={`/track/${track._id}?audio=${track.trackUrl}`}>
                   <span style={{ color: "#958f8f", textDecoration: "unset" }}>
                     {track.title}
                   </span>
