@@ -2,6 +2,7 @@ import * as React from "react";
 
 import ThemeRegistry from "@/components/theme-registry/theme.registry";
 import Header from "@/components/home-page/header/app.header";
+import Footer from "@/components/home-page/footer/app.footer";
 
 export default function RootLayout({
   children,
@@ -14,6 +15,7 @@ export default function RootLayout({
         <ThemeRegistry>
           <Header />
           {children}
+          <Footer />
         </ThemeRegistry>
       </body>
     </html>
