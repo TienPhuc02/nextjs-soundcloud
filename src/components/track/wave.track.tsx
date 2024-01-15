@@ -1,19 +1,22 @@
-import React, { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useRef } from "react";
 import WaveSurfer from "wavesurfer.js";
 
 const WaveTrack = () => {
+  const searchParams = useSearchParams();
+  const fileName = searchParams.get("audio");
+  const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const element = document.getElementById("wave-track");
-    if (element) {
+    if (containerRef.current) {
       WaveSurfer.create({
-        container: element,
+        container: containerRef.current,
         waveColor: "rgb(200, 0, 200)",
         progressColor: "rgb(100, 0, 100)",
-        url: `/tracks/hoidanit.mp3`,
+        url: `/api?audio=${fileName}`,
       });
     }
   }, []);
-  return <div id="wave-track">WaveTrack</div>;
+  return <div ref={containerRef}>WaveTrack</div>;
 };
 
 export default WaveTrack;
