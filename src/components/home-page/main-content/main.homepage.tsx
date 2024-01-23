@@ -9,14 +9,13 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Divider from "@mui/material/Divider";
 import { Box } from "@mui/material";
-import Image from "next/image";
 import Link from "next/link";
 interface IProps {
   data: ITrackTop[];
   title: string;
 }
 const MainSlider = (props: IProps) => {
-  console.log("🚀 ~ MainSlider ~ props:", props.data);
+  // console.log("🚀 ~ MainSlider ~ props:", props.data);
   const NextArrow = (props: any) => {
     return (
       <Button

@@ -10,3 +10,4 @@ export async function GET(request: NextRequest, response: NextResponse) {
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/tracks/${fileName}`
   );
 }
+//route này để lấy dữ liệu từ backend khi vào đường route là /api?audio=CHILL.mp3
