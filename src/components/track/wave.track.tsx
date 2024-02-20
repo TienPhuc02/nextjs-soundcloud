@@ -13,9 +13,10 @@ const WaveTrack = () => {
   const searchParams = useSearchParams();
   const fileName = searchParams.get("audio");
   const containerRef = useRef<HTMLDivElement>(null);
-  const optionsMemo = useMemo(() => {
+  const optionsMemo = useMemo((): Omit<WaveSurferOptions, "container"> => {
     return {
       waveColor: "rgb(200, 0, 200)",
+      barWidth: 2,
       progressColor: "rgb(100, 0, 100)",
       url: `/api?audio=${fileName}`,
     };
@@ -33,7 +34,7 @@ const WaveTrack = () => {
       wavesurfer.on("play", () => setIsPlaying(true)),
     ];
     return () => {
-      subscription.forEach((unsub)=>unsub());
+      subscription.forEach((unsub) => unsub());
     };
   }, [wavesurfer]);
   const onPlayPause = useCallback(() => {
