@@ -1,6 +1,12 @@
 import { useWavesurfer } from "@/utils/customHook";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import WaveSurfer, { WaveSurferOptions } from "wavesurfer.js";
 
 const WaveTrack = () => {
@@ -15,7 +21,32 @@ const WaveTrack = () => {
     };
   }, []);
   const wavesurfer = useWavesurfer(containerRef, optionsMemo);
-  return <div ref={containerRef}>WaveTrack</div>;
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  useEffect(() => {
+    if (!wavesurfer) {
+      return;
+    }
+    setIsPlaying(false);
+    const subscription = [
+      wavesurfer.on("play", () => setIsPlaying(true)),
+      wavesurfer.on("pause", () => setIsPlaying(false)),
+      wavesurfer.on("play", () => setIsPlaying(true)),
+    ];
+    return () => {
+      subscription.forEach((unsub)=>unsub());
+    };
+  }, [wavesurfer]);
+  const onPlayPause = useCallback(() => {
+    if (wavesurfer) {
+      wavesurfer?.isPlaying() ? wavesurfer.pause() : wavesurfer.play();
+    }
+  }, [wavesurfer]);
+  return (
+    <div>
+      <div ref={containerRef}>WaveTrack</div>
+      <button onClick={onPlayPause}>{isPlaying ? "Pause" : "Play"}</button>
+    </div>
+  );
 };
 
 export default WaveTrack;
