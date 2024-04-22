@@ -11,3 +11,4 @@ export async function GET(request: NextRequest, response: NextResponse) {
   );
 }
 //route này để lấy dữ liệu từ backend khi vào đường route là /api?audio=CHILL.mp3
+//call du lieu tu server
