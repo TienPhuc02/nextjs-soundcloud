@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import WaveSurfer, { WaveSurferOptions } from "wavesurfer.js";
-
+import "./wave.scss";
 const WaveTrack = () => {
   const searchParams = useSearchParams();
   const fileName = searchParams.get("audio");
@@ -66,10 +66,20 @@ const WaveTrack = () => {
       return;
     }
     setIsPlaying(false);
+    const timeEl = document.querySelector("#time")!;
+    const durationEl = document.querySelector("#duration")!;
     const subscription = [
       wavesurfer.on("play", () => setIsPlaying(true)),
       wavesurfer.on("pause", () => setIsPlaying(false)),
       wavesurfer.on("play", () => setIsPlaying(true)),
+      wavesurfer.on(
+        "decode",
+        (duration) => (durationEl.textContent = formatTime(duration))
+      ),
+      wavesurfer.on(
+        "timeupdate",
+        (currentTime) => (timeEl.textContent = formatTime(currentTime))
+      ),
     ];
     return () => {
       subscription.forEach((unsub) => unsub());
@@ -80,9 +90,20 @@ const WaveTrack = () => {
       wavesurfer?.isPlaying() ? wavesurfer.pause() : wavesurfer.play();
     }
   }, [wavesurfer]);
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const secondsRemainder = Math.round(seconds) % 60;
+    const paddedSeconds = `0${secondsRemainder}`.slice(-2);
+    return `${minutes}:${paddedSeconds}`;
+  };
   return (
     <div>
-      <div ref={containerRef}>WaveTrack</div>
+      <div ref={containerRef} className="wave-form-container">
+        WaveTrack
+        <div id="time">0:00</div>
+        <div id="duration">0:00</div>
+      </div>
       <button onClick={onPlayPause}>{isPlaying ? "Pause" : "Play"}</button>
     </div>
   );

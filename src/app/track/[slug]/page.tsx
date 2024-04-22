@@ -2,7 +2,7 @@
 import React from "react";
 import { useSearchParams } from "next/navigation";
 import WaveTrack from "@/components/track/wave.track";
-import WaveSurfer from "wavesurfer.js";
+import { Container } from "@mui/material";
 const DetailTrackPage = (props: any) => {
   const searchParams = useSearchParams();
   const { params } = props;
@@ -12,10 +12,11 @@ const DetailTrackPage = (props: any) => {
   console.log("🚀 ~ DetailTrackPage ~ search:", search);
   return (
     <div>
-      DetailTrackPage
-      <div>
-        <WaveTrack />
-      </div>
+      <Container>
+        <div>
+          <WaveTrack />
+        </div>
+      </Container>
     </div>
   );
 };
