@@ -68,9 +68,8 @@ const WaveTrack = () => {
     setIsPlaying(false);
     const timeEl = document.querySelector("#time")!;
     const durationEl = document.querySelector("#duration")!;
-    const hover = document.querySelector("#hover")!;
+    const hover = document.querySelector("#hover") as HTMLElement;
     const waveform = containerRef.current!;
-    //@ts-ignore
     waveform.addEventListener(
       "pointermove",
       (e) => (hover.style.width = `${e.offsetX}px`)
