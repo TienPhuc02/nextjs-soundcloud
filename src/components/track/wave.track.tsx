@@ -9,15 +9,27 @@ import React, {
 } from "react";
 import WaveSurfer, { WaveSurferOptions } from "wavesurfer.js";
 import "./wave.scss";
+import { time } from "console";
 const WaveTrack = () => {
   const searchParams = useSearchParams();
   const fileName = searchParams.get("audio");
   const containerRef = useRef<HTMLDivElement>(null);
+  const [time, setTime] = useState<string>("0:00");
+  const [duration, setDuration] = useState<string>("0:00");
+  const hoverRef = useRef<HTMLDivElement>(null);
   const optionsMemo = useMemo((): Omit<WaveSurferOptions, "container"> => {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d")!;
+
+    let gradient;
+    let progressGradient;
+    if (typeof window !== "undefined") {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d")!;
+    }
+
     // Define the waveform gradient
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 1.35)!;
+    gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 1.35)!;
     gradient.addColorStop(0, "#656666"); // Top color
     gradient.addColorStop((canvas.height * 0.7) / canvas.height, "#656666"); // Top color
     gradient.addColorStop((canvas.height * 0.7 + 1) / canvas.height, "#ffffff"); // White line
@@ -26,12 +38,7 @@ const WaveTrack = () => {
     gradient.addColorStop(1, "#B1B1B1"); // Bottom color
 
     // Define the progress gradient
-    const progressGradient = ctx.createLinearGradient(
-      0,
-      0,
-      0,
-      canvas.height * 1.35
-    )!;
+    progressGradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 1.35)!;
     progressGradient.addColorStop(0, "#EE772F"); // Top color
     progressGradient.addColorStop(
       (canvas.height * 0.7) / canvas.height,
@@ -66,9 +73,7 @@ const WaveTrack = () => {
       return;
     }
     setIsPlaying(false);
-    const timeEl = document.querySelector("#time")!;
-    const durationEl = document.querySelector("#duration")!;
-    const hover = document.querySelector("#hover") as HTMLElement;
+    const hover = hoverRef.current!;
     const waveform = containerRef.current!;
     waveform.addEventListener(
       "pointermove",
@@ -78,14 +83,12 @@ const WaveTrack = () => {
       wavesurfer.on("play", () => setIsPlaying(true)),
       wavesurfer.on("pause", () => setIsPlaying(false)),
       wavesurfer.on("play", () => setIsPlaying(true)),
-      wavesurfer.on(
-        "decode",
-        (duration) => (durationEl.textContent = formatTime(duration))
-      ),
-      wavesurfer.on(
-        "timeupdate",
-        (currentTime) => (timeEl.textContent = formatTime(currentTime))
-      ),
+      wavesurfer.on("decode", (duration) => {
+        setDuration(formatTime(duration));
+      }),
+      wavesurfer.on("timeupdate", (currentTime) => {
+        setTime(formatTime(currentTime));
+      }),
     ];
     return () => {
       subscription.forEach((unsub) => unsub());
@@ -105,10 +108,14 @@ const WaveTrack = () => {
   };
   return (
     <div style={{ marginTop: 50 }}>
-      <div ref={containerRef} className="wave-form-container">
-        <div id="time">0:00</div>
-        <div id="duration">0:00</div>
-        <div id="hover"></div>
+      <div ref={containerRef} 
+      //co the lam voi ref
+      className="wave-form-container">
+        <div className="time">{time}</div>
+        <div className="duration" id="duration">
+          {duration}
+        </div>
+        <div ref={hoverRef} className="hover-wave"></div>
       </div>
       <button onClick={onPlayPause}>{isPlaying ? "Pause" : "Play"}</button>
     </div>

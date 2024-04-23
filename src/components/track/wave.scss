@@ -2,12 +2,12 @@
   cursor: pointer;
   position: relative;
   &:hover {
-    #hover {
+    .hover-wave {
       opacity: 1;
     }
   }
 }
-#hover {
+.hover-wave {
   position: absolute;
   left: 0;
   top: 0;
@@ -23,7 +23,7 @@
 #waveform:hover #hover {
   opacity: 1;
 }
-#time,
+.time,
 #duration {
   position: absolute;
   z-index: 11;
@@ -35,7 +35,7 @@
   padding: 2px;
   color: #ddd;
 }
-#time {
+.time {
   left: 0;
 }
 #duration {
