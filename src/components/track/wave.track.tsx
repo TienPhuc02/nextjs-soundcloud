@@ -61,8 +61,8 @@ const WaveTrack = () => {
     return {
       waveColor: gradient,
       progressColor: progressGradient,
-      barWidth: 2,
-      height: 150,
+      barWidth: 3,
+      height: 100,
       url: `/api?audio=${fileName}`,
     };
   }, []);
@@ -108,14 +108,18 @@ const WaveTrack = () => {
   };
   return (
     <div style={{ marginTop: 50 }}>
-      <div ref={containerRef} 
-      //co the lam voi ref
-      className="wave-form-container">
+      <div
+        ref={containerRef}
+        //co the lam voi ref
+        className="wave-form-container"
+      >
         <div className="time">{time}</div>
         <div className="duration" id="duration">
           {duration}
         </div>
         <div ref={hoverRef} className="hover-wave"></div>
+
+        <div className="overlay"></div>
       </div>
       <button onClick={onPlayPause}>{isPlaying ? "Pause" : "Play"}</button>
     </div>
