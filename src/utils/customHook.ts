@@ -99,13 +99,14 @@ export const useWavesurfer = (
         ctx.closePath();
       },
     });
-
+    ws.on("click", () => {
+      ws.play();
+    });
     setWavesurfer(ws);
 
     return () => {
       ws.destroy();
     };
   }, [options, containerRef]);
-
   return wavesurfer;
 };
