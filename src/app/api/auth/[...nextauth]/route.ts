@@ -10,7 +10,21 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GITHUB_SECRET!,
     }),
     // ...add more providers here
+    //callback là gọi lại 1 hàm sau khi login thành công
   ],
+  callbacks: {
+    jwt({ token, trigger, user, profile, account }) {
+      if (trigger === "signIn" && account?.provider === "github") {
+        token.address = "Phuc";
+      }
+      return token;
+    },
+    session({ session, token, user }) {
+      //@ts-ignore
+      session.address = token.address;
+      return session;
+    },
+  },
 };
 const handler = NextAuth(authOptions);
 

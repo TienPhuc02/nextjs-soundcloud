@@ -20,7 +20,8 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import { Avatar } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -64,6 +65,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Header() {
   const router = useRouter();
   const { data: session } = useSession();
+  console.log("check session:", session);
   console.log(">> check session : ", session); // đẩy cookie lên server giải mã rồi trả về session vì auth bằng server nên gọi là session
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -111,7 +113,14 @@ export default function Header() {
           Profile
         </Link>
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose();
+          signOut();
+        }}
+      >
+        Log out
+      </MenuItem>
     </Menu>
   );
 
@@ -212,7 +221,10 @@ export default function Header() {
                 </>
               ) : (
                 <>
-                  <Link href="/api/auth/signin"> Login </Link>
+                  <Link href="#" onClick={() => signIn()}>
+                    {" "}
+                    Login{" "}
+                  </Link>
                 </>
               )}
             </Box>
