@@ -1,10 +1,11 @@
+"use client";
 import * as React from "react";
 
 import ThemeRegistry from "@/components/theme-registry/theme.registry";
 import Header from "@/components/home-page/header/app.header";
 import Footer from "@/components/home-page/footer/app.footer";
-import NextAuthWrapper from "@/lib/wrapper.next-auth";
-export default function RootLayout({
+import { SessionProvider } from "next-auth/react";
+export default function NextAuthWrapper({
   children,
 }: {
   children: React.ReactNode;
@@ -12,13 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ThemeRegistry>
-          <NextAuthWrapper>
-            <Header />
-            {children}
-            <Footer />
-          </NextAuthWrapper>
-        </ThemeRegistry>
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );

@@ -20,7 +20,7 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import { Avatar } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import { useSession } from "next-auth/react";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -63,7 +63,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Header() {
   const router = useRouter();
-
+  const { data: session } = useSession();
+  console.log(">> check session : ", session); // đẩy cookie lên server giải mã rồi trả về session vì auth bằng server nên gọi là session
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -202,16 +203,18 @@ export default function Header() {
                 },
               }}
             >
-              <Link
-                // style={{ color: "unset", textDecoration: "unset" }}
-                href="/playlist"
-              >
-                {" "}
-                PlayList
-              </Link>
-              <Link href="/like"> Likes </Link>
-              <Link href="/upload"> Upload </Link>
-              <Avatar onClick={handleProfileMenuOpen}>P</Avatar>
+              {session ? (
+                <>
+                  <Link href="/playlist"> PlayList</Link>
+                  <Link href="/like"> Likes </Link>
+                  <Link href="/upload"> Upload </Link>
+                  <Avatar onClick={handleProfileMenuOpen}>P</Avatar>
+                </>
+              ) : (
+                <>
+                  <Link href="/api/auth/signin"> Login </Link>
+                </>
+              )}
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" } }}>
               <IconButton
