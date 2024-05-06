@@ -7,7 +7,7 @@ import "react-h5-audio-player/lib/styles.css";
 const Footer = () => {
   const hasMounted = useHasMounted();
   if (!hasMounted) return <></>; //fragment
-  console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
+  // console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
   return (
     <div>
       <AppBar

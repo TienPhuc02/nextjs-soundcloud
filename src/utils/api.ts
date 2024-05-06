@@ -17,7 +17,7 @@ export const sendRequest = async <T>(props: IRequest) => {
     body: body ? JSON.stringify(body) : null,
     ...nextOption,
   };
-  console.log("🚀 ~ sendRequest ~ options:", options)
+  // console.log("🚀 ~ sendRequest ~ options:", options)
   if (useCredentials) options.credentials = "include";
   if (queryParams) {
     url = `${url}?${queryString.stringify(queryParams)}`;

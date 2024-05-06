@@ -6,10 +6,10 @@ import { Container } from "@mui/material";
 const DetailTrackPage = (props: any) => {
   const searchParams = useSearchParams();
   const { params } = props;
-  console.log("🚀 ~ DetailTrackPage ~ params:", params);
+  // console.log("🚀 ~ DetailTrackPage ~ params:", params);
 
   const search = searchParams.get("audio");
-  console.log("🚀 ~ DetailTrackPage ~ search:", search);
+  // console.log("🚀 ~ DetailTrackPage ~ search:", search);
   return (
     <div>
       <Container>
