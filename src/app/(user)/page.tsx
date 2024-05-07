@@ -3,7 +3,8 @@ import * as React from "react";
 import { Container } from "@mui/material";
 import { sendRequest } from "@/utils/api";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+
 export default async function HomePage() {
   //dựa vào thông tin của người dùng để xem có call API hay không -> thông tin người dùng được lưu trong session -> get session
 
