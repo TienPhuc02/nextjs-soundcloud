@@ -221,10 +221,7 @@ export default function Header() {
                 </>
               ) : (
                 <>
-                  <Link href="#" onClick={() => signIn()}>
-                    {" "}
-                    Login{" "}
-                  </Link>
+                  <Link href={"/auth/signin"}> Login </Link>
                 </>
               )}
             </Box>
