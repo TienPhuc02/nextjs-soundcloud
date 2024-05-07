@@ -1,10 +1,13 @@
-import React from 'react'
-
+"use client";
+import React from "react";
 
 const UploadPage = () => {
   return (
-    <div>UploadPage</div>
-  )
-}
+    <div>
+      UploadPage
+      <input type="file" multiple accept="image/png" />
+    </div>
+  );
+};
 
-export default UploadPage
+export default UploadPage;
