@@ -216,7 +216,7 @@ export default function Header() {
                 <>
                   <Link href="/playlist"> PlayList</Link>
                   <Link href="/like"> Likes </Link>
-                  <Link href="/upload"> Upload </Link>
+                  <Link href="/track/upload"> Upload </Link>
                   <Avatar onClick={handleProfileMenuOpen}>P</Avatar>
                 </>
               ) : (
