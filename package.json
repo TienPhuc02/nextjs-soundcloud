@@ -16,11 +16,13 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
+    "axios": "1.5.0",
     "next": "latest",
     "next-auth": "4.23.1",
     "query-string": "^8.1.0",
     "react": "latest",
     "react-dom": "latest",
+    "react-dropzone": "14.2.3",
     "react-h5-audio-player": "3.8.6",
     "sass": "1.75.0",
     "wavesurfer.js": "7.3.1"
