@@ -6,6 +6,7 @@ import {
   Button,
   Divider,
   Grid,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -34,7 +35,8 @@ const AuthSignIn = (props: any) => {
 
   const [errorUsername, setErrorUsername] = useState<string>("");
   const [errorPassword, setErrorPassword] = useState<string>("");
-
+  const [openMessage, setOpenMessage] = useState<boolean>(false);
+  const [resMessage, setResMessage] = useState<string>("");
   const handleSubmit = async () => {
     setIsErrorUsername(false);
     setIsErrorPassword(false);
@@ -61,7 +63,8 @@ const AuthSignIn = (props: any) => {
       //redirect to home
       router.push("/");
     } else {
-      alert(res.error);
+      setOpenMessage(true);
+      setResMessage(res.error);
     }
     console.log(">> check res:", res);
   };
@@ -121,6 +124,12 @@ const AuthSignIn = (props: any) => {
             />
             <TextField
               onChange={(event) => setPassword(event.target.value)}
+              onKeyDown={(e) => {
+                console.log(e.key);
+                if (e.key === "Enter") {
+                  handleSubmit();
+                }
+              }}
               variant="outlined"
               margin="normal"
               required
@@ -189,6 +198,21 @@ const AuthSignIn = (props: any) => {
           </div>
         </Grid>
       </Grid>
+      <Snackbar
+        open={openMessage}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => {
+            setOpenMessage(false);
+          }}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {resMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
