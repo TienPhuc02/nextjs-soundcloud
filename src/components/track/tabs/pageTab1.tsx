@@ -32,7 +32,7 @@ function InputFileUpload() {
     </Button>
   );
 }
-const Step1 = (props: Props) => {
+const PageTab1 = (props: Props) => {
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     // Do something with the files
     console.log(">> check accepted File ", acceptedFiles);
@@ -59,4 +59,4 @@ const Step1 = (props: Props) => {
     </section>
   );
 };
-export default Step1;
+export default PageTab1;

@@ -2,9 +2,9 @@
 import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Step1 from "./steps/step1";
+import PageTab1 from "./tabs/pageTab1";
+import UploadPage from "./tabs/pageTab2";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -54,13 +54,10 @@ function BasicTabs() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <Step1 />
+        <PageTab1 />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Item Three
+        <UploadPage />
       </CustomTabPanel>
     </Box>
   );
