@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback } from "react";
-import "./theme.css";
+import "./upload.css";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
