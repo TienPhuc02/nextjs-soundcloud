@@ -9,15 +9,31 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 interface IPropsUploadPage {
   trackUpload: {
     fileName: string;
     percent: number;
+    uploadedTrackName: string;
   };
 }
+interface INewTrack {
+  title: string;
+  description: string;
+  trackUrl: string;
+  imgUrl: string;
+  category: string;
+}
 const UploadPage = (props: IPropsUploadPage) => {
+  const { trackUpload } = props;
+  const [info, setInfo] = useState<INewTrack>({
+    title: "",
+    description: "",
+    trackUrl: "",
+    imgUrl: "",
+    category: "",
+  });
   console.log(props.trackUpload);
   const category = [
     {
@@ -33,7 +49,16 @@ const UploadPage = (props: IPropsUploadPage) => {
       label: "PARTY",
     },
   ];
-
+  useEffect(() => {
+    if (trackUpload && trackUpload.uploadedTrackName) {
+      console.log(">> check track upload ", trackUpload);
+      setInfo({
+        ...info,
+        trackUrl: trackUpload.uploadedTrackName,
+      });
+    }
+  }, [trackUpload]);
+  console.log(">> check info", info);
   const [selectedCategory, setSelectedCategory] = useState("");
 
   function LinearProgressWithLabel(
@@ -60,13 +85,6 @@ const UploadPage = (props: IPropsUploadPage) => {
       </Box>
     );
   }
-
-  interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
-  }
-
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -78,21 +96,6 @@ const UploadPage = (props: IPropsUploadPage) => {
     whiteSpace: "nowrap",
     width: 1,
   });
-
-  function InputFileUpload() {
-    return (
-      <Button
-        onClick={(e) => e.preventDefault()}
-        component="label"
-        variant="contained"
-        startIcon={<CloudUploadIcon />}
-      >
-        Upload file
-        <VisuallyHiddenInput type="file" />
-      </Button>
-    );
-  }
-
   const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedCategory(event.target.value);
   };
@@ -122,35 +125,64 @@ const UploadPage = (props: IPropsUploadPage) => {
             <div></div>
           </div>
           <div>
-            <InputFileUpload />
+            <Button
+              onClick={(e) => e.preventDefault()}
+              component="label"
+              variant="contained"
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload file
+              <VisuallyHiddenInput type="file" />
+            </Button>
           </div>
         </Grid>
         <Grid item xs={6} md={8}>
           <TextField
-            id="standard-basic"
+            name="title"
+            value={info?.title}
+            onChange={(e) =>
+              setInfo({
+                ...info,
+                title: e.target.value,
+              })
+            }
             label="Title"
             variant="standard"
             fullWidth
             margin="dense"
           />
           <TextField
-            id="standard-basic"
+            name="description"
+            value={info?.description}
+            onChange={(e) =>
+              setInfo({
+                ...info,
+                description: e.target.value,
+              })
+            }
             label="Description"
             variant="standard"
             fullWidth
             margin="dense"
           />
           <TextField
+            name="category"
+            value={info?.category}
+            onChange={(e) =>
+              setInfo({
+                ...info,
+                category: e.target.value,
+              })
+            }
             sx={{
               mt: 3,
             }}
-            id="outlined-select-category"
             select
             label="Category"
             fullWidth
             variant="standard"
-            value={selectedCategory}
-            onChange={handleCategoryChange}
+            // value={selectedCategory}
+            // onChange={handleCategoryChange}
           >
             {category.map((option) => (
               <MenuItem key={option.value} value={option.value}>

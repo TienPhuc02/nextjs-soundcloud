@@ -11,6 +11,7 @@ import axios from "axios";
 interface IProps {
   setValue: (v: number) => void;
   setTrackUpload: any;
+  trackUpload: any;
 }
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -24,6 +25,7 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 const PageTab1 = (props: IProps) => {
+  const { trackUpload } = props;
   const { data: session } = useSession();
   //useMemo -> variable
   const onDrop = useCallback(
@@ -51,6 +53,7 @@ const PageTab1 = (props: IProps) => {
                   (progressEvent.loaded * 100) / progressEvent.total!
                 );
                 props.setTrackUpload({
+                  ...trackUpload,
                   fileName: acceptedFiles[0].name,
                   percent: percentCompleted,
                 });
@@ -58,6 +61,10 @@ const PageTab1 = (props: IProps) => {
               },
             }
           );
+          props.setTrackUpload({
+            ...trackUpload,
+            uploadedTrackName: res.data.data.fileName,
+          });
           console.log(res.data.data.fileName);
         } catch (error) {
           //@ts-ignore

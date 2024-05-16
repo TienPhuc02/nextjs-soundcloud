@@ -43,6 +43,7 @@ const UploadTabs = (props: Props) => {
   const [trackUpload, setTrackUpload] = React.useState({
     fileName: "",
     percent: 0,
+    uploadedTrackName: "",
   });
   return (
     <div>
@@ -58,7 +59,11 @@ const UploadTabs = (props: Props) => {
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <PageTab1 setValue={setValue} setTrackUpload={setTrackUpload} />
+          <PageTab1
+            setValue={setValue}
+            setTrackUpload={setTrackUpload}
+            trackUpload={trackUpload}
+          />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           <UploadPage trackUpload={trackUpload} />
