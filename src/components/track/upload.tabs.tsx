@@ -34,38 +34,36 @@ function a11yProps(index: number) {
   };
 }
 
-function BasicTabs() {
+const UploadTabs = (props: Props) => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
-  return (
-    <Box sx={{ width: "100%", border: "1px solid #ccc", mt: 5 }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
-          <Tab label="Track" {...a11yProps(0)} />
-          <Tab label="Basic Information" {...a11yProps(1)} />
-        </Tabs>
-      </Box>
-      <CustomTabPanel value={value} index={0}>
-        <PageTab1 />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        <UploadPage />
-      </CustomTabPanel>
-    </Box>
-  );
-}
-const UploadTabs = (props: Props) => {
+  const [trackUpload, setTrackUpload] = React.useState({
+    fileName: "",
+    percent: 0,
+  });
   return (
     <div>
-      <BasicTabs />
+      <Box sx={{ width: "100%", border: "1px solid #ccc", mt: 5 }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+          >
+            <Tab label="Track" {...a11yProps(0)} />
+            <Tab label="Basic Information" {...a11yProps(1)} />
+          </Tabs>
+        </Box>
+        <CustomTabPanel value={value} index={0}>
+          <PageTab1 setValue={setValue} setTrackUpload={setTrackUpload} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+          <UploadPage trackUpload={trackUpload} />
+        </CustomTabPanel>
+      </Box>
     </div>
   );
 };

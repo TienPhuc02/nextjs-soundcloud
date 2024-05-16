@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import "./upload.css";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { styled } from "@mui/material/styles";
@@ -8,7 +8,10 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { sendRequest, sendRequestFile } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-type Props = {};
+interface IProps {
+  setValue: (v: number) => void;
+  setTrackUpload: any;
+}
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -20,44 +23,19 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
-function InputFileUpload() {
-  return (
-    <Button
-      component="label"
-      role={undefined}
-      variant="contained"
-      tabIndex={-1}
-      startIcon={<CloudUploadIcon />}
-      onClick={(event) => event.preventDefault()}
-    >
-      Upload file
-      <VisuallyHiddenInput type="file" />
-    </Button>
-  );
-}
-const PageTab1 = (props: Props) => {
+const PageTab1 = (props: IProps) => {
   const { data: session } = useSession();
   //useMemo -> variable
   const onDrop = useCallback(
     async (acceptedFiles: FileWithPath[]) => {
       // Do something with the files
       if (acceptedFiles && acceptedFiles[0]) {
+        props.setValue(1);
         const audio = acceptedFiles[0];
         console.log(" check audio", audio);
         const formData = new FormData();
         formData.append("fileUpload", audio);
-        // const res = await sendRequestFile<IBackendRes<ITrackTop[]>>({
-        //   url: "http://localhost:8000/api/v1/files/upload",
-        //   method: "POST",
-        //   body: formData,
-        //   headers: {
-        //     Authorization: `Bearer ${session?.access_token}`,
-        //     target_type: "tracks",
-        //   },
-        // });
-        // console.log(">> check accepted File ", audio);
-        // console.log(">> check session", session?.access_token);
-        // console.log("check res", res);
+
         try {
           const res = await axios.post(
             "http://localhost:8000/api/v1/files/upload",
@@ -66,6 +44,17 @@ const PageTab1 = (props: Props) => {
               headers: {
                 Authorization: `Bearer ${session?.access_token}`,
                 target_type: "tracks",
+                delay: 5000,
+              },
+              onUploadProgress: (progressEvent) => {
+                let percentCompleted = Math.floor(
+                  (progressEvent.loaded * 100) / progressEvent.total!
+                );
+                props.setTrackUpload({
+                  fileName: acceptedFiles[0].name,
+                  percent: percentCompleted,
+                });
+                console.log(">>> check percentCompleted", percentCompleted);
               },
             }
           );
@@ -81,7 +70,10 @@ const PageTab1 = (props: Props) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
-      audio: [".mp3", ".mp4", ".wav", ".m4a"],
+      "audio/mpeg": [".mp3"],
+      "audio/mp4": [".mp4"],
+      "audio/wav": [".wav"],
+      "audio/x-m4a": [".m4a"],
     },
   });
   const files = acceptedFiles.map((file: FileWithPath) => (
@@ -93,7 +85,17 @@ const PageTab1 = (props: Props) => {
     <section className="container">
       <div {...getRootProps({ className: "dropzone" })}>
         <input {...getInputProps()} />
-        <InputFileUpload />
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          tabIndex={-1}
+          startIcon={<CloudUploadIcon />}
+          onClick={(event) => event.preventDefault()}
+        >
+          Upload file
+          <VisuallyHiddenInput type="file" />
+        </Button>
         <p>Click or drap/drop track</p>
       </div>
       <aside>

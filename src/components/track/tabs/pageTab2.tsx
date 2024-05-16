@@ -9,9 +9,16 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import React, { useState } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-const UploadPage = () => {
+interface IPropsUploadPage {
+  trackUpload: {
+    fileName: string;
+    percent: number;
+  };
+}
+const UploadPage = (props: IPropsUploadPage) => {
+  console.log(props.trackUpload);
   const category = [
     {
       value: "CHILL",
@@ -26,6 +33,9 @@ const UploadPage = () => {
       label: "PARTY",
     },
   ];
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+
   function LinearProgressWithLabel(
     props: LinearProgressProps & { value: number }
   ) {
@@ -43,31 +53,20 @@ const UploadPage = () => {
     );
   }
 
-  function LinearWithValueLabel() {
-    const [progress, setProgress] = React.useState(10);
-
-    React.useEffect(() => {
-      const timer = setInterval(() => {
-        setProgress((prevProgress) =>
-          prevProgress >= 100 ? 10 : prevProgress + 10
-        );
-      }, 800);
-      return () => {
-        clearInterval(timer);
-      };
-    }, []);
-
+  function LinearWithValueLabel(props: IPropsUploadPage) {
     return (
       <Box sx={{ width: "100%" }}>
-        <LinearProgressWithLabel value={progress} />
+        <LinearProgressWithLabel value={props.trackUpload.percent} />
       </Box>
     );
   }
+
   interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
     value: number;
   }
+
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -94,11 +93,16 @@ const UploadPage = () => {
     );
   }
 
+  const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedCategory(event.target.value);
+  };
+
   return (
     <>
       <div>
-        <div>Your uploading track:</div>
-        <LinearWithValueLabel />
+        <div>{props.trackUpload.fileName}</div>
+
+        <LinearWithValueLabel trackUpload={props.trackUpload} />
       </div>
 
       <Grid container spacing={2} mt={5}>
@@ -140,12 +144,13 @@ const UploadPage = () => {
             sx={{
               mt: 3,
             }}
-            id="outlined-select-currency"
+            id="outlined-select-category"
             select
             label="Category"
             fullWidth
             variant="standard"
-            //   defaultValue="EUR"
+            value={selectedCategory}
+            onChange={handleCategoryChange}
           >
             {category.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -166,4 +171,5 @@ const UploadPage = () => {
     </>
   );
 };
+
 export default UploadPage;
