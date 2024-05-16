@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { sendRequest, sendRequestFile } from "@/utils/api";
 import { useSession } from "next-auth/react";
+import axios from "axios";
 type Props = {};
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -45,18 +46,34 @@ const PageTab1 = (props: Props) => {
         console.log(" check audio", audio);
         const formData = new FormData();
         formData.append("fileUpload", audio);
-        const res = await sendRequestFile<IBackendRes<ITrackTop[]>>({
-          url: "http://localhost:8000/api/v1/files/upload",
-          method: "POST",
-          body: formData,
-          headers: {
-            Authorization: `Bearer ${session?.access_token}`,
-            target_type: "tracks",
-          },
-        });
-        console.log(">> check accepted File ", audio);
-        console.log(">> check session", session?.access_token);
-        console.log("check res", res);
+        // const res = await sendRequestFile<IBackendRes<ITrackTop[]>>({
+        //   url: "http://localhost:8000/api/v1/files/upload",
+        //   method: "POST",
+        //   body: formData,
+        //   headers: {
+        //     Authorization: `Bearer ${session?.access_token}`,
+        //     target_type: "tracks",
+        //   },
+        // });
+        // console.log(">> check accepted File ", audio);
+        // console.log(">> check session", session?.access_token);
+        // console.log("check res", res);
+        try {
+          const res = await axios.post(
+            "http://localhost:8000/api/v1/files/upload",
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${session?.access_token}`,
+                target_type: "tracks",
+              },
+            }
+          );
+          console.log(res.data.data.fileName);
+        } catch (error) {
+          //@ts-ignore
+          console.log(error?.response?.data);
+        }
       }
     },
     [session]
