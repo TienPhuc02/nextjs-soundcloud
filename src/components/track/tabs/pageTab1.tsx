@@ -1,18 +1,14 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import { useDropzone, FileWithPath } from "react-dropzone";
 import "./upload.css";
-import { FileWithPath, useDropzone } from "react-dropzone";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { useCallback, useState } from "react";
 import { sendRequest, sendRequestFile } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-interface IProps {
-  setValue: (v: number) => void;
-  setTrackUpload: any;
-  trackUpload: any;
-}
+
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -24,20 +20,39 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
+
+function InputFileUpload() {
+  return (
+    <Button
+      onClick={(event) => event.preventDefault()}
+      component="label"
+      variant="contained"
+      startIcon={<CloudUploadIcon />}
+    >
+      Upload file
+      <VisuallyHiddenInput type="file" />
+    </Button>
+  );
+}
+
+interface IProps {
+  setValue: (v: number) => void;
+  setTrackUpload: any;
+  trackUpload: any;
+}
+
 const PageTab1 = (props: IProps) => {
   const { trackUpload } = props;
   const { data: session } = useSession();
-  //useMemo -> variable
+  //useMemo => variable
   const onDrop = useCallback(
     async (acceptedFiles: FileWithPath[]) => {
       // Do something with the files
       if (acceptedFiles && acceptedFiles[0]) {
         props.setValue(1);
         const audio = acceptedFiles[0];
-        console.log(" check audio", audio);
         const formData = new FormData();
         formData.append("fileUpload", audio);
-
         try {
           const res = await axios.post(
             "http://localhost:8000/api/v1/files/upload",
@@ -52,28 +67,28 @@ const PageTab1 = (props: IProps) => {
                 let percentCompleted = Math.floor(
                   (progressEvent.loaded * 100) / progressEvent.total!
                 );
+
                 props.setTrackUpload({
                   ...trackUpload,
                   fileName: acceptedFiles[0].name,
                   percent: percentCompleted,
                 });
-                console.log(">>> check percentCompleted", percentCompleted);
               },
             }
           );
-          props.setTrackUpload({
-            ...trackUpload,
+          props.setTrackUpload((prevState: any) => ({
+            ...prevState,
             uploadedTrackName: res.data.data.fileName,
-          });
-          console.log(res.data.data.fileName);
+          }));
         } catch (error) {
           //@ts-ignore
-          console.log(error?.response?.data);
+          alert(error?.response?.data?.message);
         }
       }
     },
     [session]
   );
+
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
@@ -83,27 +98,19 @@ const PageTab1 = (props: IProps) => {
       "audio/x-m4a": [".m4a"],
     },
   });
+
   const files = acceptedFiles.map((file: FileWithPath) => (
     <li key={file.path}>
       {file.path} - {file.size} bytes
     </li>
   ));
+
   return (
     <section className="container">
       <div {...getRootProps({ className: "dropzone" })}>
         <input {...getInputProps()} />
-        <Button
-          component="label"
-          role={undefined}
-          variant="contained"
-          tabIndex={-1}
-          startIcon={<CloudUploadIcon />}
-          onClick={(event) => event.preventDefault()}
-        >
-          Upload file
-          <VisuallyHiddenInput type="file" />
-        </Button>
-        <p>Click or drap/drop track</p>
+        <InputFileUpload />
+        <p>Click hoặc Drag/Drop để upload file track!</p>
       </div>
       <aside>
         <h4>Files</h4>
@@ -112,4 +119,5 @@ const PageTab1 = (props: IProps) => {
     </section>
   );
 };
+
 export default PageTab1;

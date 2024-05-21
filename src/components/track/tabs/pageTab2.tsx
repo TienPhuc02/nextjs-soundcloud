@@ -1,26 +1,111 @@
-import {
-  Box,
-  Button,
-  Grid,
-  LinearProgress,
-  LinearProgressProps,
-  MenuItem,
-  TextField,
-  Typography,
-} from "@mui/material";
+"use client";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import * as React from "react";
 import { styled } from "@mui/material/styles";
-import React, { useEffect, useState } from "react";
+import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import LinearProgress, {
+  LinearProgressProps,
+} from "@mui/material/LinearProgress";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { imageConfigDefault } from "next/dist/shared/lib/image-config";
-interface IPropsUploadPage {
+import { sendRequest } from "@/utils/api";
+
+function LinearProgressWithLabel(
+  props: LinearProgressProps & { value: number }
+) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ width: "100%", mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="text.secondary">{`${Math.round(
+          props.value
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+function LinearWithValueLabel(props: IProps) {
+  return (
+    <Box sx={{ width: "100%" }}>
+      <LinearProgressWithLabel value={props.trackUpload.percent} />
+    </Box>
+  );
+}
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
+
+function InputFileUpload(props: any) {
+  const { setInfo, info } = props;
+  const { data: session } = useSession();
+
+  const handleUpload = async (image: any) => {
+    const formData = new FormData();
+    formData.append("fileUpload", image);
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/api/v1/files/upload",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+            target_type: "images",
+          },
+        }
+      );
+      setInfo({
+        ...info,
+        imgUrl: res.data.data.fileName,
+      });
+    } catch (error) {
+      //@ts-ignore
+      alert(error?.response?.data?.message);
+    }
+  };
+
+  return (
+    <Button
+      onChange={(e) => {
+        const event = e.target as HTMLInputElement;
+        if (event.files) {
+          handleUpload(event.files[0]);
+        }
+      }}
+      component="label"
+      variant="contained"
+      startIcon={<CloudUploadIcon />}
+    >
+      Upload file
+      <VisuallyHiddenInput type="file" />
+    </Button>
+  );
+}
+
+interface IProps {
   trackUpload: {
     fileName: string;
     percent: number;
     uploadedTrackName: string;
   };
 }
+
 interface INewTrack {
   title: string;
   description: string;
@@ -28,17 +113,28 @@ interface INewTrack {
   imgUrl: string;
   category: string;
 }
-const UploadPage = (props: IPropsUploadPage) => {
-  const { trackUpload } = props;
 
-  const [info, setInfo] = useState<INewTrack>({
+const PageTab2 = (props: IProps) => {
+  const { data: session } = useSession();
+
+  const { trackUpload } = props;
+  const [info, setInfo] = React.useState<INewTrack>({
     title: "",
     description: "",
     trackUrl: "",
     imgUrl: "",
     category: "",
   });
-  console.log(props.trackUpload);
+
+  React.useEffect(() => {
+    if (trackUpload && trackUpload.uploadedTrackName) {
+      setInfo({
+        ...info,
+        trackUrl: trackUpload.uploadedTrackName,
+      });
+    }
+  }, [trackUpload]);
+
   const category = [
     {
       value: "CHILL",
@@ -53,111 +149,34 @@ const UploadPage = (props: IPropsUploadPage) => {
       label: "PARTY",
     },
   ];
-  useEffect(() => {
-    if (trackUpload && trackUpload.uploadedTrackName) {
-      console.log(">> check track upload ", trackUpload);
-      setInfo({
-        ...info,
-        trackUrl: trackUpload.uploadedTrackName,
-      });
+
+  const handleSubmitForm = async () => {
+    const res = await sendRequest<IBackendRes<ITrackTop[]>>({
+      url: "http://localhost:8000/api/v1/tracks",
+      method: "POST",
+      body: {
+        title: info.title,
+        description: info.description,
+        trackUrl: info.trackUrl,
+        imgUrl: info.imgUrl,
+        category: info.category,
+      },
+      headers: {
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+    });
+    if (res.data) {
+      alert("create success");
+    } else {
+      alert(res.message);
     }
-  }, [trackUpload]);
-  
-  const [selectedCategory, setSelectedCategory] = useState("");
-
-  function LinearProgressWithLabel(
-    props: LinearProgressProps & { value: number }
-  ) {
-    return (
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Box sx={{ width: "100%", mr: 1 }}>
-          <LinearProgress variant="determinate" {...props} />
-        </Box>
-        <Box sx={{ minWidth: 35 }}>
-          <Typography variant="body2" color="text.secondary">{`${Math.round(
-            props.value
-          )}%`}</Typography>
-        </Box>
-      </Box>
-    );
-  }
-
-  function LinearWithValueLabel(props: IPropsUploadPage) {
-    return (
-      <Box sx={{ width: "100%" }}>
-        <LinearProgressWithLabel value={props.trackUpload.percent} />
-      </Box>
-    );
-  }
-  function InputFileUpload(props: any) {
-    const { setInfo, info } = props;
-    const { data: session } = useSession();
-    const handleUpload = async (image: any) => {
-      const formData = new FormData();
-      formData.append("fileUpload", image);
-
-      try {
-        const res = await axios.post(
-          "http://localhost:8000/api/v1/files/upload",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${session?.access_token}`,
-              target_type: "images",
-            },
-          }
-        );
-        console.log(res.data.data.fileName);
-        setInfo({
-          ...info,
-          imgUrl: res.data.data.fileName,
-        });
-      } catch (error) {
-        //@ts-ignore
-        console.log(error?.response?.data);
-      }
-    };
-    return (
-      <Button
-        onChange={(e) => {
-          const event = e.target as HTMLInputElement;
-          if (event.files) {
-            console.log("check files", event.files[0]);
-            handleUpload(event.files[0]);
-          }
-        }}
-        component="label"
-        variant="contained"
-        startIcon={<CloudUploadIcon />}
-      >
-        Upload file
-        <VisuallyHiddenInput type="file" />
-      </Button>
-    );
-  }
-  const VisuallyHiddenInput = styled("input")({
-    clip: "rect(0 0 0 0)",
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    whiteSpace: "nowrap",
-    width: 1,
-  });
-  const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedCategory(event.target.value);
   };
-  const handleSubmitForm = () => {
-    console.log("check info", info);
-  };
+
   return (
-    <>
+    <div>
       <div>
-        <div>{props.trackUpload.fileName}</div>
-
-        <LinearWithValueLabel trackUpload={props.trackUpload} />
+        <div>{trackUpload.fileName}</div>
+        <LinearWithValueLabel trackUpload={trackUpload} />
       </div>
 
       <Grid container spacing={2} mt={5}>
@@ -190,7 +209,6 @@ const UploadPage = (props: IPropsUploadPage) => {
         </Grid>
         <Grid item xs={6} md={8}>
           <TextField
-            name="title"
             value={info?.title}
             onChange={(e) =>
               setInfo({
@@ -204,7 +222,6 @@ const UploadPage = (props: IPropsUploadPage) => {
             margin="dense"
           />
           <TextField
-            name="description"
             value={info?.description}
             onChange={(e) =>
               setInfo({
@@ -218,7 +235,6 @@ const UploadPage = (props: IPropsUploadPage) => {
             margin="dense"
           />
           <TextField
-            name="category"
             value={info?.category}
             onChange={(e) =>
               setInfo({
@@ -229,12 +245,11 @@ const UploadPage = (props: IPropsUploadPage) => {
             sx={{
               mt: 3,
             }}
+            id="outlined-select-currency"
             select
             label="Category"
             fullWidth
             variant="standard"
-            // value={selectedCategory}
-            // onChange={handleCategoryChange}
           >
             {category.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -247,14 +262,14 @@ const UploadPage = (props: IPropsUploadPage) => {
             sx={{
               mt: 5,
             }}
-            onClick={handleSubmitForm}
+            onClick={() => handleSubmitForm()}
           >
             Save
           </Button>
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 };
 
-export default UploadPage;
+export default PageTab2;
