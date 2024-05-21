@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { sendRequest } from "@/utils/api";
+import { useToast } from "@/utils/toast";
 
 function LinearProgressWithLabel(
   props: LinearProgressProps & { value: number }
@@ -55,6 +56,11 @@ const VisuallyHiddenInput = styled("input")({
 function InputFileUpload(props: any) {
   const { setInfo, info } = props;
   const { data: session } = useSession();
+  const toast = useToast();
+
+  if (!session) {
+    return null;
+  }
 
   const handleUpload = async (image: any) => {
     const formData = new FormData();
@@ -76,7 +82,7 @@ function InputFileUpload(props: any) {
       });
     } catch (error) {
       //@ts-ignore
-      alert(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -104,6 +110,7 @@ interface IProps {
     percent: number;
     uploadedTrackName: string;
   };
+  setValue: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface INewTrack {
@@ -115,9 +122,7 @@ interface INewTrack {
 }
 
 const PageTab2 = (props: IProps) => {
-  const { data: session } = useSession();
-
-  const { trackUpload } = props;
+  const { setValue } = props;
   const [info, setInfo] = React.useState<INewTrack>({
     title: "",
     description: "",
@@ -125,6 +130,10 @@ const PageTab2 = (props: IProps) => {
     imgUrl: "",
     category: "",
   });
+  const { data: session } = useSession();
+  const toast = useToast();
+
+  const { trackUpload } = props;
 
   React.useEffect(() => {
     if (trackUpload && trackUpload.uploadedTrackName) {
@@ -166,9 +175,10 @@ const PageTab2 = (props: IProps) => {
       },
     });
     if (res.data) {
-      alert("create success");
+      setValue(0);
+      toast.success("Create Success a new track success!");
     } else {
-      alert(res.message);
+      toast.error(res.message);
     }
   };
 
@@ -176,7 +186,7 @@ const PageTab2 = (props: IProps) => {
     <div>
       <div>
         <div>{trackUpload.fileName}</div>
-        <LinearWithValueLabel trackUpload={trackUpload} />
+        <LinearWithValueLabel trackUpload={trackUpload} setValue={setValue} />
       </div>
 
       <Grid container spacing={2} mt={5}>

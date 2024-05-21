@@ -4,7 +4,7 @@ import "./upload.css";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { sendRequest, sendRequestFile } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import axios from "axios";
@@ -44,15 +44,22 @@ interface IProps {
 const PageTab1 = (props: IProps) => {
   const { trackUpload } = props;
   const { data: session } = useSession();
-  //useMemo => variable
+
+  // Avoid returning null if session is not available yet
+  // Instead, handle it in the onDrop function
   const onDrop = useCallback(
     async (acceptedFiles: FileWithPath[]) => {
-      // Do something with the files
+      if (!session) {
+        console.error("Session not available");
+        return;
+      }
+
       if (acceptedFiles && acceptedFiles[0]) {
         props.setValue(1);
         const audio = acceptedFiles[0];
         const formData = new FormData();
         formData.append("fileUpload", audio);
+
         try {
           const res = await axios.post(
             "http://localhost:8000/api/v1/files/upload",
@@ -61,7 +68,6 @@ const PageTab1 = (props: IProps) => {
               headers: {
                 Authorization: `Bearer ${session?.access_token}`,
                 target_type: "tracks",
-                delay: 5000,
               },
               onUploadProgress: (progressEvent) => {
                 let percentCompleted = Math.floor(
@@ -80,13 +86,12 @@ const PageTab1 = (props: IProps) => {
             ...prevState,
             uploadedTrackName: res.data.data.fileName,
           }));
-        } catch (error) {
-          //@ts-ignore
-          alert(error?.response?.data?.message);
+        } catch (error: any) {
+          console.error(error?.response?.data?.message);
         }
       }
     },
-    [session]
+    [session, props, trackUpload]
   );
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
