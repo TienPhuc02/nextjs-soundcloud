@@ -11,6 +11,9 @@ import {
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { imageConfigDefault } from "next/dist/shared/lib/image-config";
 interface IPropsUploadPage {
   trackUpload: {
     fileName: string;
@@ -27,6 +30,7 @@ interface INewTrack {
 }
 const UploadPage = (props: IPropsUploadPage) => {
   const { trackUpload } = props;
+
   const [info, setInfo] = useState<INewTrack>({
     title: "",
     description: "",
@@ -58,7 +62,7 @@ const UploadPage = (props: IPropsUploadPage) => {
       });
     }
   }, [trackUpload]);
-  console.log(">> check info", info);
+  
   const [selectedCategory, setSelectedCategory] = useState("");
 
   function LinearProgressWithLabel(
@@ -85,6 +89,52 @@ const UploadPage = (props: IPropsUploadPage) => {
       </Box>
     );
   }
+  function InputFileUpload(props: any) {
+    const { setInfo, info } = props;
+    const { data: session } = useSession();
+    const handleUpload = async (image: any) => {
+      const formData = new FormData();
+      formData.append("fileUpload", image);
+
+      try {
+        const res = await axios.post(
+          "http://localhost:8000/api/v1/files/upload",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.access_token}`,
+              target_type: "images",
+            },
+          }
+        );
+        console.log(res.data.data.fileName);
+        setInfo({
+          ...info,
+          imgUrl: res.data.data.fileName,
+        });
+      } catch (error) {
+        //@ts-ignore
+        console.log(error?.response?.data);
+      }
+    };
+    return (
+      <Button
+        onChange={(e) => {
+          const event = e.target as HTMLInputElement;
+          if (event.files) {
+            console.log("check files", event.files[0]);
+            handleUpload(event.files[0]);
+          }
+        }}
+        component="label"
+        variant="contained"
+        startIcon={<CloudUploadIcon />}
+      >
+        Upload file
+        <VisuallyHiddenInput type="file" />
+      </Button>
+    );
+  }
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -99,7 +149,9 @@ const UploadPage = (props: IPropsUploadPage) => {
   const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedCategory(event.target.value);
   };
-
+  const handleSubmitForm = () => {
+    console.log("check info", info);
+  };
   return (
     <>
       <div>
@@ -122,18 +174,18 @@ const UploadPage = (props: IPropsUploadPage) => {
           }}
         >
           <div style={{ height: 250, width: 250, background: "#ccc" }}>
-            <div></div>
+            <div>
+              {info.imgUrl && (
+                <img
+                  height={250}
+                  width={250}
+                  src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${info.imgUrl}`}
+                />
+              )}
+            </div>
           </div>
           <div>
-            <Button
-              onClick={(e) => e.preventDefault()}
-              component="label"
-              variant="contained"
-              startIcon={<CloudUploadIcon />}
-            >
-              Upload file
-              <VisuallyHiddenInput type="file" />
-            </Button>
+            <InputFileUpload setInfo={setInfo} info={info} />
           </div>
         </Grid>
         <Grid item xs={6} md={8}>
@@ -195,6 +247,7 @@ const UploadPage = (props: IPropsUploadPage) => {
             sx={{
               mt: 5,
             }}
+            onClick={handleSubmitForm}
           >
             Save
           </Button>
