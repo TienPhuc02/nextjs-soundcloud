@@ -62,7 +62,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function Header() {
+export default function Header({ params }: { params: { slug: string } }) {
   const router = useRouter();
   const { data: session } = useSession();
   console.log("check session:", session);
@@ -107,7 +107,7 @@ export default function Header() {
     >
       <MenuItem onClick={handleMenuClose}>
         <Link
-          href="profile"
+          href={`profile/${session?.user?._id}`}
           style={{ color: "unset", textDecoration: "unset" }}
         >
           Profile
