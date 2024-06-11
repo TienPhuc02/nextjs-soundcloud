@@ -10,7 +10,11 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <Header />
+      <Header
+        params={{
+          slug: "",
+        }}
+      />
       {children}
       <Footer />
     </>

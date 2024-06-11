@@ -1,7 +1,7 @@
 import NextAuth from "next-auth/next";
 
 interface IUser {
-  _is: string;
+  _id: string;
   username: string;
   email: string;
   isVerify: string;
