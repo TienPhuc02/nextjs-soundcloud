@@ -1,13 +1,17 @@
 "use client";
+import { TrackContext } from "@/lib/track.wrapper";
 import { useHasMounted } from "@/utils/customHook";
 import { AppBar, Container } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 const Footer = () => {
   const hasMounted = useHasMounted();
   if (!hasMounted) return <></>; //fragment
   // console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
+  const { color, serColor } = useContext(TrackContext);
+
+  console.log("check color>>", color);
   return (
     <div style={{ marginTop: 50 }}>
       <AppBar
