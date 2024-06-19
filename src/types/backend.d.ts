@@ -1,3 +1,5 @@
+import { extract } from "query-string/base";
+
 export {};
 // https://bobbyhadz.com/blog/typescript-make-types-global#declare-global-types-in-typescript
 
@@ -17,7 +19,7 @@ declare global {
       role: string;
       type: string;
     };
-    isDeleted: string;
+    isDeleted: boolean;
     createdAt: string;
     updatedAt: string;
   }
@@ -46,5 +48,13 @@ declare global {
       total: number;
     };
     result: T[];
+  }
+
+  interface IShareTrack extends ITrackTop {
+    isPlaying: boolean;
+  }
+  interface ITrackContext {
+    currentTrack: IShareTrack;
+    setCurrentTrack: (v: IShareTrack) => void;
   }
 }

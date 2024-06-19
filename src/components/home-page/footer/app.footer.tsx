@@ -1,5 +1,5 @@
 "use client";
-import { TrackContext } from "@/lib/track.wrapper";
+import { TrackContext, useTrackContext } from "@/lib/track.wrapper";
 import { useHasMounted } from "@/utils/customHook";
 import { AppBar, Container } from "@mui/material";
 import React, { useContext } from "react";
@@ -9,9 +9,9 @@ const Footer = () => {
   const hasMounted = useHasMounted();
   if (!hasMounted) return <></>; //fragment
   // console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
-  const { color, serColor } = useContext(TrackContext);
+  const { currentTrack, setCurrentTrack } = useTrackContext() as ITrackContext;
 
-  console.log("check color>>", color);
+  console.log("check currentTrack>>", currentTrack);
   return (
     <div style={{ marginTop: 50 }}>
       <AppBar
