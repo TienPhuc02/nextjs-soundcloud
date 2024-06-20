@@ -9,16 +9,20 @@ import PauseIcon from "@mui/icons-material/Pause";
 import "./wave.scss";
 import { Tooltip } from "@mui/material";
 import { sendRequest } from "@/utils/api";
-
-const WaveTrack = () => {
+import { useTrackContext } from "@/lib/track.wrapper";
+interface IProps {
+  track: ITrackTop | null;
+}
+const WaveTrack = (props: IProps) => {
+  const { track } = props;
   const searchParams = useSearchParams();
   const fileName = searchParams.get("audio");
   const containerRef = useRef<HTMLDivElement>(null);
   const hoverRef = useRef<HTMLDivElement>(null);
-  const id = searchParams.get("id");
+  // const id = searchParams.get("id");
   const [time, setTime] = useState<string>("0:00");
   const [duration, setDuration] = useState<string>("0:00");
-
+  const { currentTrack, setCurrentTrack } = useTrackContext() as ITrackContext;
   const optionsMemo = useMemo((): Omit<WaveSurferOptions, "container"> => {
     let gradient, progressGradient;
     if (typeof window !== "undefined") {
@@ -112,18 +116,18 @@ const WaveTrack = () => {
     };
   }, [wavesurfer]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await sendRequest<IBackendRes<ITrackTop>>({
-        url: `http://localhost:8080/api/v1/tracks/${id}`,
-        method: "GET",
-      });
-      if (res && res.data) {
-        setTrackInfo(res.data);
-      }
-    };
-    fetchData();
-  }, [id]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const res = await sendRequest<IBackendRes<ITrackTop>>({
+  //       url: `http://localhost:8080/api/v1/tracks/${id}`,
+  //       method: "GET",
+  //     });
+  //     if (res && res.data) {
+  //       setTrackInfo(res.data);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [id]);
   // On play button click
   const onPlayClick = useCallback(() => {
     if (wavesurfer) {
@@ -165,6 +169,16 @@ const WaveTrack = () => {
     const percent = (moment / hardCodeDuration) * 100;
     return `${percent}%`;
   };
+  useEffect(() => {
+    if (wavesurfer && currentTrack.isPlaying) {
+      wavesurfer.pause();
+    }
+  }, [currentTrack]);
+  useEffect(() => {
+    if (track?._id && !currentTrack?._id) {
+      setCurrentTrack({ ...track, isPlaying: false });
+    }
+  }, [track]);
   return (
     <div style={{ marginTop: 20 }}>
       <div
@@ -220,7 +234,7 @@ const WaveTrack = () => {
                 }}
               >
                 {/* Phuc Do's song */}
-                {trackInfo?.title}
+                {track?.title}
               </div>
               <div
                 style={{
@@ -232,8 +246,7 @@ const WaveTrack = () => {
                   color: "white",
                 }}
               >
-                {trackInfo?.description}
-                {/* Eric */}
+                {track?.description}
               </div>
             </div>
           </div>
