@@ -8,7 +8,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import "./wave.scss";
 import { Tooltip } from "@mui/material";
-import { sendRequest } from "@/utils/api";
+import { fetchDefaultImages, sendRequest } from "@/utils/api";
 import { useTrackContext } from "@/lib/track.wrapper";
 interface IProps {
   track: ITrackTop | null;
@@ -278,7 +278,7 @@ const WaveTrack = (props: IProps) => {
                         }}
                         className={"" + item.id}
                         key={item.id}
-                        src={"http://localhost:8000/images/chill1.png"}
+                        src={fetchDefaultImages(item?.user?.type as string)}
                         alt=""
                         style={{
                           height: 20,
@@ -304,13 +304,21 @@ const WaveTrack = (props: IProps) => {
             alignItems: "center",
           }}
         >
-          <div
-            style={{
-              background: "#ccc",
-              width: 250,
-              height: 250,
-            }}
-          ></div>
+          {track?.imgUrl ? (
+            <img
+              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track?.imgUrl}`}
+              width={250}
+              height={250}
+            />
+          ) : (
+            <div
+              style={{
+                background: "#ccc",
+                width: 250,
+                height: 250,
+              }}
+            ></div>
+          )}
         </div>
       </div>
     </div>
