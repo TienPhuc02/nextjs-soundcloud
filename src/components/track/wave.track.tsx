@@ -12,9 +12,10 @@ import { sendRequest } from "@/utils/api";
 import { useTrackContext } from "@/lib/track.wrapper";
 interface IProps {
   track: ITrackTop | null;
+  commentsRes: ITrackComment[] | null;
 }
 const WaveTrack = (props: IProps) => {
-  const { track } = props;
+  const { track, commentsRes } = props;
   const searchParams = useSearchParams();
   const fileName = searchParams.get("audio");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -266,30 +267,31 @@ const WaveTrack = (props: IProps) => {
               }}
             ></div>
             <div className="comments" style={{ position: "relative" }}>
-              {arrComments.map((item) => {
-                return (
-                  <Tooltip title={item.content} arrow={true} key={item.id}>
-                    <img
-                      onPointerMove={(e) => {
-                        const hover = hoverRef.current!;
-                        hover.style.width = calcLeft(item.moment + 3);
-                      }}
-                      className={"" + item.id}
-                      key={item.id}
-                      src={"http://localhost:8000/images/chill1.png"}
-                      alt=""
-                      style={{
-                        height: 20,
-                        width: 20,
-                        position: "absolute",
-                        top: 71,
-                        zIndex: 20,
-                        left: calcLeft(item.moment),
-                      }}
-                    />
-                  </Tooltip>
-                );
-              })}
+              {commentsRes &&
+                commentsRes.map((item) => {
+                  return (
+                    <Tooltip title={item.content} arrow={true} key={item.id}>
+                      <img
+                        onPointerMove={(e) => {
+                          const hover = hoverRef.current!;
+                          hover.style.width = calcLeft(item.moment + 3);
+                        }}
+                        className={"" + item.id}
+                        key={item.id}
+                        src={"http://localhost:8000/images/chill1.png"}
+                        alt=""
+                        style={{
+                          height: 20,
+                          width: 20,
+                          position: "absolute",
+                          top: 71,
+                          zIndex: 20,
+                          left: calcLeft(item.moment),
+                        }}
+                      />
+                    </Tooltip>
+                  );
+                })}
             </div>
           </div>
         </div>
