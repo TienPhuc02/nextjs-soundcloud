@@ -16,6 +16,7 @@ export default function RootLayout({
         }}
       />
       {children}
+      <div style={{ marginBottom: "100px" }}></div>
       <Footer />
     </>
   );

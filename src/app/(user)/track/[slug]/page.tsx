@@ -36,7 +36,7 @@ const DetailTrackPage = async (props: any) => {
         <div>
           <WaveTrack
             track={trackRes?.data ?? null}
-            commentsRes={commentsRes.data?.result ?? null}
+            commentsRes={commentsRes.data?.result ?? []}
           />
         </div>
       </Container>

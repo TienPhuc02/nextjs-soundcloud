@@ -10,9 +10,10 @@ import "./wave.scss";
 import { Tooltip } from "@mui/material";
 import { fetchDefaultImages, sendRequest } from "@/utils/api";
 import { useTrackContext } from "@/lib/track.wrapper";
+import CommentTrack from "./comment.track";
 interface IProps {
   track: ITrackTop | null;
-  commentsRes: ITrackComment[] | null;
+  commentsRes: ITrackComment[];
 }
 const WaveTrack = (props: IProps) => {
   const { track, commentsRes } = props;
@@ -320,6 +321,9 @@ const WaveTrack = (props: IProps) => {
             ></div>
           )}
         </div>
+      </div>
+      <div className="comment-list-track">
+        <CommentTrack comments={commentsRes} track={track} />
       </div>
     </div>
   );
