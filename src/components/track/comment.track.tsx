@@ -12,12 +12,19 @@ interface ITrackCommentProps {
   track: ITrackTop | null;
 }
 
+const formatSecondsToTime = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+};
+
 const CommentTrack = ({ comments, track }: ITrackCommentProps) => {
   console.log("check comments", comments);
   console.log("check track", track);
+
   return (
     <>
-      <div className="comment-container " style={{ marginTop: "50px" }}>
+      <div className="comment-container" style={{ marginTop: "50px" }}>
         <div className="input-comment">
           <TextField
             id="standard-basic"
@@ -91,6 +98,9 @@ const CommentTrack = ({ comments, track }: ITrackCommentProps) => {
                       >
                         <div style={{ opacity: 0.3 }}>
                           {comment?.user?.email as string}
+                          <span style={{ cursor: "pointer" }}>
+                            at {formatSecondsToTime(comment.moment)}
+                          </span>
                         </div>
                         <div>{comment.content}</div>
                       </div>
