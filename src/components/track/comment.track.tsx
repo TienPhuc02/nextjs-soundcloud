@@ -1,9 +1,12 @@
 "use client";
-import { fetchDefaultImages } from "@/utils/api";
+import { fetchDefaultImages, sendRequest } from "@/utils/api";
 import { TextField } from "@mui/material";
+import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import React from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 dayjs.extend(relativeTime);
 
@@ -19,9 +22,29 @@ const formatSecondsToTime = (seconds: number) => {
 };
 
 const CommentTrack = ({ comments, track }: ITrackCommentProps) => {
+  const { data: session } = useSession();
+  const router = useRouter();
   console.log("check comments", comments);
   console.log("check track", track);
-
+  const [yourComment, setYourComment] = useState("");
+  const handleSubmit = async () => {
+    const res = await sendRequest<IBackendRes<ITrackComment>>({
+      url: `http://localhost:8000/api/v1/comments`,
+      method: "POST",
+      body: {
+        content: yourComment,
+        moment: 10,
+        track: track?._id,
+      },
+      headers: {
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+    });
+    if (res.data) {
+      setYourComment("");
+      router.refresh();
+    }
+  };
   return (
     <>
       <div className="comment-container" style={{ marginTop: "50px" }}>
@@ -31,6 +54,13 @@ const CommentTrack = ({ comments, track }: ITrackCommentProps) => {
             style={{ width: "100%" }}
             label="Comment"
             variant="standard"
+            value={yourComment}
+            onChange={(e) => setYourComment(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSubmit();
+              }
+            }}
           />
         </div>
         <div
@@ -97,7 +127,9 @@ const CommentTrack = ({ comments, track }: ITrackCommentProps) => {
                         className="name-comment"
                       >
                         <div style={{ opacity: 0.3 }}>
-                          {comment?.user?.email as string}
+                          <span style={{ marginRight: "10px" }}>
+                            {comment?.user?.email as string}
+                          </span>
                           <span style={{ cursor: "pointer" }}>
                             at {formatSecondsToTime(comment.moment)}
                           </span>

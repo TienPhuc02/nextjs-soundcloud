@@ -3,10 +3,11 @@ import { useSearchParams } from "next/navigation";
 import WaveTrack from "@/components/track/wave.track";
 import { Container } from "@mui/material";
 import { sendRequest } from "@/utils/api";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const DetailTrackPage = async (props: any) => {
   const { params } = props;
-
   // Fetch track details
   const trackRes = await sendRequest<IBackendRes<ITrackTop>>({
     url: `http://localhost:8000/api/v1/tracks/${params.slug}`,

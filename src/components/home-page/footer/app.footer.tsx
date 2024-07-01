@@ -11,13 +11,16 @@ const Footer = () => {
   const { currentTrack, setCurrentTrack } = useTrackContext() as ITrackContext;
 
   useEffect(() => {
-    if (currentTrack?.isPlaying === false) {
+    if (playerRef.current) {
       //@ts-ignore
-      playerRef?.current?.audio?.current?.pause();
-    }
-    if (currentTrack?.isPlaying === true) {
-      //@ts-ignore
-      playerRef?.current?.audio?.play();
+      const audio = playerRef.current.audio.current;
+
+      if (currentTrack?.isPlaying === false) {
+        audio.pause();
+      }
+      if (currentTrack?.isPlaying === true) {
+        audio.play();
+      }
     }
   }, [currentTrack]);
   if (!hasMounted) return <></>;

@@ -17,6 +17,7 @@ interface IProps {
 }
 const WaveTrack = (props: IProps) => {
   const { track, commentsRes } = props;
+  const { currentTrack, setCurrentTrack } = useTrackContext() as ITrackContext;
   const searchParams = useSearchParams();
   const fileName = searchParams.get("audio");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -24,7 +25,6 @@ const WaveTrack = (props: IProps) => {
   // const id = searchParams.get("id");
   const [time, setTime] = useState<string>("0:00");
   const [duration, setDuration] = useState<string>("0:00");
-  const { currentTrack, setCurrentTrack } = useTrackContext() as ITrackContext;
   const optionsMemo = useMemo((): Omit<WaveSurferOptions, "container"> => {
     let gradient, progressGradient;
     if (typeof window !== "undefined") {
@@ -86,8 +86,6 @@ const WaveTrack = (props: IProps) => {
   const wavesurfer = useWavesurfer(containerRef, optionsMemo);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [trackInfo, setTrackInfo] = useState<ITrackTop | null>(null);
-  // Initialize wavesurfer when the container mounts
-  // or any of the props change
   useEffect(() => {
     if (!wavesurfer) return;
     setIsPlaying(false);
@@ -118,19 +116,6 @@ const WaveTrack = (props: IProps) => {
     };
   }, [wavesurfer]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const res = await sendRequest<IBackendRes<ITrackTop>>({
-  //       url: `http://localhost:8080/api/v1/tracks/${id}`,
-  //       method: "GET",
-  //     });
-  //     if (res && res.data) {
-  //       setTrackInfo(res.data);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [id]);
-  // On play button click
   const onPlayClick = useCallback(() => {
     if (wavesurfer) {
       wavesurfer.isPlaying() ? wavesurfer.pause() : wavesurfer.play();
@@ -143,29 +128,6 @@ const WaveTrack = (props: IProps) => {
     const paddedSeconds = `0${secondsRemainder}`.slice(-2);
     return `${minutes}:${paddedSeconds}`;
   };
-  const arrComments = [
-    {
-      id: 1,
-      avatar: "http://localhost:8000/images/chill1.png",
-      moment: 10,
-      user: "username 1",
-      content: "just a comment1",
-    },
-    {
-      id: 2,
-      avatar: "http://localhost:8000/images/chill1.png",
-      moment: 30,
-      user: "username 2",
-      content: "just a comment3",
-    },
-    {
-      id: 3,
-      avatar: "http://localhost:8000/images/chill1.png",
-      moment: 50,
-      user: "username 3",
-      content: "just a comment3",
-    },
-  ];
   const calcLeft = (moment: number) => {
     const hardCodeDuration = 199;
     const percent = (moment / hardCodeDuration) * 100;
@@ -218,7 +180,7 @@ const WaveTrack = (props: IProps) => {
                   cursor: "pointer",
                 }}
               >
-                {isPlaying === true ? (
+                {currentTrack.isPlaying === true ? (
                   <PauseIcon sx={{ fontSize: 30, color: "white" }} />
                 ) : (
                   <PlayArrowIcon sx={{ fontSize: 30, color: "white" }} />
