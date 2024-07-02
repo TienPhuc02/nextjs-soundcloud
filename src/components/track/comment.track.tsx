@@ -7,12 +7,14 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import WaveSurfer from "wavesurfer.js";
 
 dayjs.extend(relativeTime);
 
 interface ITrackCommentProps {
   comments: ITrackComment[];
   track: ITrackTop | null;
+  wavesurfer: WaveSurfer | null;
 }
 
 const formatSecondsToTime = (seconds: number) => {
@@ -21,7 +23,7 @@ const formatSecondsToTime = (seconds: number) => {
   return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
 };
 
-const CommentTrack = ({ comments, track }: ITrackCommentProps) => {
+const CommentTrack = ({ comments, track, wavesurfer }: ITrackCommentProps) => {
   const { data: session } = useSession();
   const router = useRouter();
   console.log("check comments", comments);
@@ -33,7 +35,7 @@ const CommentTrack = ({ comments, track }: ITrackCommentProps) => {
       method: "POST",
       body: {
         content: yourComment,
-        moment: 10,
+        moment: Math.round(wavesurfer?.getCurrentTime() ?? 0),
         track: track?._id,
       },
       headers: {
@@ -43,6 +45,13 @@ const CommentTrack = ({ comments, track }: ITrackCommentProps) => {
     if (res.data) {
       setYourComment("");
       router.refresh();
+    }
+  };
+  const handleJumpTrack = (moment: number) => {
+    if (wavesurfer) {
+      const duration = wavesurfer.getDuration();
+      wavesurfer.seekTo(moment / duration);
+      wavesurfer.play();
     }
   };
   return (
@@ -130,7 +139,10 @@ const CommentTrack = ({ comments, track }: ITrackCommentProps) => {
                           <span style={{ marginRight: "10px" }}>
                             {comment?.user?.email as string}
                           </span>
-                          <span style={{ cursor: "pointer" }}>
+                          <span
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleJumpTrack(comment.moment)}
+                          >
                             at {formatSecondsToTime(comment.moment)}
                           </span>
                         </div>

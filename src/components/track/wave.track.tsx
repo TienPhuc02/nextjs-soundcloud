@@ -119,6 +119,9 @@ const WaveTrack = (props: IProps) => {
   const onPlayClick = useCallback(() => {
     if (wavesurfer) {
       wavesurfer.isPlaying() ? wavesurfer.pause() : wavesurfer.play();
+      // setCurrentTrack({ ...currentTrack, isPlaying: true });
+    } else {
+      setCurrentTrack({ ...currentTrack, isPlaying: false });
     }
   }, [wavesurfer]);
 
@@ -143,6 +146,7 @@ const WaveTrack = (props: IProps) => {
       setCurrentTrack({ ...track, isPlaying: false });
     }
   }, [track]);
+  console.log("check currentTrack", currentTrack);
   return (
     <div style={{ marginTop: 20 }}>
       <div
@@ -180,7 +184,7 @@ const WaveTrack = (props: IProps) => {
                   cursor: "pointer",
                 }}
               >
-                {currentTrack.isPlaying === true ? (
+                {isPlaying === true ? (
                   <PauseIcon sx={{ fontSize: 30, color: "white" }} />
                 ) : (
                   <PlayArrowIcon sx={{ fontSize: 30, color: "white" }} />
@@ -285,7 +289,11 @@ const WaveTrack = (props: IProps) => {
         </div>
       </div>
       <div className="comment-list-track">
-        <CommentTrack comments={commentsRes} track={track} />
+        <CommentTrack
+          comments={commentsRes}
+          track={track}
+          wavesurfer={wavesurfer}
+        />
       </div>
     </div>
   );
