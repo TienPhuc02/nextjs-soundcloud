@@ -1,5 +1,6 @@
 "use client";
 import { fetchDefaultImages, sendRequest } from "@/utils/api";
+import { useHasMounted } from "@/utils/customHook";
 import { TextField } from "@mui/material";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -25,6 +26,7 @@ const formatSecondsToTime = (seconds: number) => {
 
 const CommentTrack = ({ comments, track, wavesurfer }: ITrackCommentProps) => {
   const { data: session } = useSession();
+  const hasMounted = useHasMounted(); // hook này để biết là component về với client chưa
   const router = useRouter();
   console.log("check comments", comments);
   console.log("check track", track);
@@ -150,7 +152,7 @@ const CommentTrack = ({ comments, track, wavesurfer }: ITrackCommentProps) => {
                       </div>
                     </div>
                     <div style={{ opacity: 0.3 }}>
-                      {dayjs(comment.createdAt).fromNow()}
+                      {hasMounted && dayjs(comment.createdAt).fromNow()}
                     </div>
                   </div>
                 );
