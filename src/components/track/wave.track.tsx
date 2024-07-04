@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useWavesurfer } from "@/utils/customHook";
 import { WaveSurferOptions } from "wavesurfer.js";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -20,10 +20,11 @@ const WaveTrack = (props: IProps) => {
   const { track, commentsRes } = props;
   const { currentTrack, setCurrentTrack } = useTrackContext() as ITrackContext;
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const viewRef = useRef(true);
   const fileName = searchParams.get("audio");
   const containerRef = useRef<HTMLDivElement>(null);
   const hoverRef = useRef<HTMLDivElement>(null);
-  // const id = searchParams.get("id");
   const [time, setTime] = useState<string>("0:00");
   const [duration, setDuration] = useState<string>("0:00");
   const optionsMemo = useMemo((): Omit<WaveSurferOptions, "container"> => {
@@ -147,6 +148,24 @@ const WaveTrack = (props: IProps) => {
       setCurrentTrack({ ...track, isPlaying: false });
     }
   }, [track]);
+  const handleIncreaseView = async () => {
+    if (viewRef.current) {
+      const resIncreaseView = await sendRequest<
+        IBackendRes<IModelPaginate<ITrackLike>>
+      >({
+        url: `http://localhost:8000/api/v1/tracks/increase-view`,
+        method: "POST",
+        body: {
+          trackId: track?._id,
+        },
+      });
+      if (resIncreaseView && resIncreaseView.data) {
+        router.refresh();
+        viewRef.current = false;
+      }
+      console.log(resIncreaseView);
+    }
+  };
   console.log("check currentTrack", currentTrack);
   return (
     <div style={{ marginTop: 20 }}>
@@ -173,7 +192,13 @@ const WaveTrack = (props: IProps) => {
           <div className="info" style={{ display: "flex" }}>
             <div>
               <div
-                onClick={() => onPlayClick()}
+                onClick={() => {
+                  onPlayClick();
+                  handleIncreaseView();
+                  if (track && wavesurfer) {
+                    setCurrentTrack({ ...currentTrack, isPlaying: false });
+                  }
+                }}
                 style={{
                   borderRadius: "50%",
                   background: "#f50",
