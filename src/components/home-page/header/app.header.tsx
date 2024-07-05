@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 import { fetchDefaultImages } from "@/utils/api";
+import Image from "next/image";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -219,7 +220,7 @@ export default function Header({ params }: { params: { slug: string } }) {
                   <Link href="/playlist"> PlayList</Link>
                   <Link href="/like"> Likes </Link>
                   <Link href="/track/upload"> Upload </Link>
-                  <img
+                  {/* <img
                     onClick={handleProfileMenuOpen}
                     src={fetchDefaultImages(session.user.type)}
                     style={{
@@ -228,6 +229,16 @@ export default function Header({ params }: { params: { slug: string } }) {
                       cursor: "pointer",
                     }}
                     alt=""
+                  /> */}
+                  <Image
+                    onClick={handleProfileMenuOpen}
+                    src={fetchDefaultImages(session.user.type)}
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    alt="image-header"
+                    width={35}
+                    height={35}
                   />
                   {/* <Avatar onClick={handleProfileMenuOpen}>P</Avatar> */}
                 </>

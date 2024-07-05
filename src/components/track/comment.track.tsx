@@ -6,6 +6,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import WaveSurfer from "wavesurfer.js";
@@ -92,10 +93,16 @@ const CommentTrack = ({ comments, track, wavesurfer }: ITrackCommentProps) => {
               alignItems: "center",
             }}
           >
-            <img
+            {/* <img
               src={fetchDefaultImages(track?.uploader.type as string)}
               alt=""
               width={150}
+            /> */}
+            <Image
+              src={fetchDefaultImages(track?.uploader.type as string)}
+              alt=""
+              width={150}
+              height={150}
             />
             <p>{track?.uploader.name}</p>
           </div>
@@ -128,10 +135,17 @@ const CommentTrack = ({ comments, track, wavesurfer }: ITrackCommentProps) => {
                         gap: "10px",
                       }}
                     >
-                      <img
+                      {/* <img
                         src={fetchDefaultImages(comment.user?.type as string)}
                         alt=""
                         style={{ width: "50px", height: "50px" }}
+                      /> */}
+                      <Image
+                        src={fetchDefaultImages(comment.user?.type as string)}
+                        alt=""
+                        style={{ width: "50px", height: "50px" }}
+                        width={50}
+                        height={50}
                       />
                       <div
                         style={{ display: "flex", flexDirection: "column" }}

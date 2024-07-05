@@ -12,6 +12,7 @@ import { fetchDefaultImages, sendRequest } from "@/utils/api";
 import { useTrackContext } from "@/lib/track.wrapper";
 import CommentTrack from "./comment.track";
 import LikeTrack from "./like.track";
+import Image from "next/image";
 interface IProps {
   track: ITrackTop | null;
   commentsRes: ITrackComment[];
@@ -264,7 +265,7 @@ const WaveTrack = (props: IProps) => {
                 commentsRes.map((item) => {
                   return (
                     <Tooltip title={item.content} arrow={true} key={item.id}>
-                      <img
+                      {/* <img
                         onPointerMove={(e) => {
                           const hover = hoverRef.current!;
                           hover.style.width = calcLeft(item.moment + 3);
@@ -281,6 +282,26 @@ const WaveTrack = (props: IProps) => {
                           zIndex: 20,
                           left: calcLeft(item.moment),
                         }}
+                      /> */}
+                      <Image
+                        onPointerMove={(e) => {
+                          const hover = hoverRef.current!;
+                          hover.style.width = calcLeft(item.moment + 3);
+                        }}
+                        className={"" + item.id}
+                        key={item.id}
+                        src={fetchDefaultImages(item?.user?.type as string)}
+                        alt="image-wave-track"
+                        style={{
+                          height: 20,
+                          width: 20,
+                          position: "absolute",
+                          top: 71,
+                          zIndex: 20,
+                          left: calcLeft(item.moment),
+                        }}
+                        width={20}
+                        height={20}
                       />
                     </Tooltip>
                   );
@@ -298,10 +319,16 @@ const WaveTrack = (props: IProps) => {
           }}
         >
           {track?.imgUrl ? (
-            <img
+            // <img
+            //   src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track?.imgUrl}`}
+            //   width={250}
+            //   height={250}
+            // />
+            <Image
               src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track?.imgUrl}`}
               width={250}
               height={250}
+              alt="img-wave-track"
             />
           ) : (
             <div
