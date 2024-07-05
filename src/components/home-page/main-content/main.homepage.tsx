@@ -158,6 +158,7 @@ const MainSlider = (props: IProps) => {
                   display: "flex",
                   flexDirection: "column",
                   marginTop: "20px",
+                  marginLeft: "20px",
                 }}
               >
                 <Link
@@ -170,6 +171,7 @@ const MainSlider = (props: IProps) => {
                       color: "#958f8f",
                       textDecoration: "unset",
                       // color: "unset",
+                      textAlign: "center",
                     }}
                   >
                     {track.title}
