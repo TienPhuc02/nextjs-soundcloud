@@ -1,7 +1,7 @@
 "use client";
 import { fetchDefaultImages, sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
-import { TextField } from "@mui/material";
+import TextField from "@mui/material/TextField";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";

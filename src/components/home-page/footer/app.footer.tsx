@@ -1,7 +1,8 @@
 "use client";
 import { TrackContext, useTrackContext } from "@/lib/track.wrapper";
 import { useHasMounted } from "@/utils/customHook";
-import { AppBar, Container } from "@mui/material";
+import Container from "@mui/material/Container";
+import AppBar from "@mui/material/AppBar";
 import React, { useContext, useEffect, useRef } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";

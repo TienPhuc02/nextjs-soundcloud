@@ -8,7 +8,7 @@ import Button from "@mui/material/Button/Button";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Divider from "@mui/material/Divider";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import Link from "next/link";
 interface IProps {
   data: ITrackTop[];

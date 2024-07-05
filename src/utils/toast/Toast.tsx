@@ -1,5 +1,7 @@
 "use client";
-import { Alert, Snackbar, SnackbarProps } from "@mui/material";
+import { SnackbarProps } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 import * as React from "react";
 import { FC } from "react";
 import { ToastMessage } from "./useToast";
