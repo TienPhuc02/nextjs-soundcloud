@@ -163,10 +163,10 @@ const WaveTrack = (props: IProps) => {
         router.refresh();
         viewRef.current = false;
       }
-      console.log(resIncreaseView);
+      // console.log(resIncreaseView);
     }
   };
-  console.log("check currentTrack", currentTrack);
+  // console.log("check currentTrack", currentTrack);
   return (
     <div style={{ marginTop: 20 }}>
       <div

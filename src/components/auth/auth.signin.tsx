@@ -52,7 +52,7 @@ const AuthSignIn = (props: any) => {
       setErrorPassword("Password is not empty.");
       return;
     }
-    console.log(">>> check username: ", username, " pass: ", password);
+    // console.log(">>> check username: ", username, " pass: ", password);
     const res = await signIn("credentials", {
       username: username,
       password: password,
@@ -65,7 +65,7 @@ const AuthSignIn = (props: any) => {
       setOpenMessage(true);
       setResMessage(res.error);
     }
-    console.log(">> check res:", res);
+    // console.log(">> check res:", res);
   };
 
   return (
@@ -124,7 +124,7 @@ const AuthSignIn = (props: any) => {
             <TextField
               onChange={(event) => setPassword(event.target.value)}
               onKeyDown={(e) => {
-                console.log(e.key);
+                // console.log(e.key);
                 if (e.key === "Enter") {
                   handleSubmit();
                 }

@@ -2,8 +2,7 @@ import React from "react";
 import { useSearchParams } from "next/navigation";
 import WaveTrack from "@/components/track/wave.track";
 import { sendRequest } from "@/utils/api";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import slugify from "slugify";
 
 import type { Metadata, ResolvingMetadata } from "next";
 import Container from "@mui/material/Container";
@@ -50,6 +49,7 @@ const DetailTrackPage = async (props: any) => {
     nextOption: { cache: "no-store" },
   });
 
+  
   // Fetch comments
   const commentsRes = await sendRequest<
     IBackendRes<IModelPaginate<ITrackComment>>
@@ -63,7 +63,7 @@ const DetailTrackPage = async (props: any) => {
       sort: "-createdAt",
     },
   });
-  console.log("check commentsRes", commentsRes);
+  // console.log("check commentsRes", commentsRes);
   // // Extract comments array from the paginated response
   // const comments = commentsRes?.data?.result ?? null;
 

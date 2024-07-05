@@ -67,8 +67,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Header({ params }: { params: { slug: string } }) {
   const router = useRouter();
   const { data: session } = useSession();
-  console.log("check session:", session);
-  console.log(">> check session : ", session); // đẩy cookie lên server giải mã rồi trả về session vì auth bằng server nên gọi là session
+  // console.log("check session:", session);
+  // console.log(">> check session : ", session); // đẩy cookie lên server giải mã rồi trả về session vì auth bằng server nên gọi là session
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);

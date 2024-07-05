@@ -26,7 +26,7 @@ const Footer = () => {
   }, [currentTrack]);
   if (!hasMounted) return <></>;
 
-  console.log("check currentTrack>>", currentTrack);
+  // console.log("check currentTrack>>", currentTrack);
 
   return (
     <>

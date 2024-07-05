@@ -28,8 +28,8 @@ const CommentTrack = ({ comments, track, wavesurfer }: ITrackCommentProps) => {
   const { data: session } = useSession();
   const hasMounted = useHasMounted(); // hook này để biết là component về với client chưa
   const router = useRouter();
-  console.log("check comments", comments);
-  console.log("check track", track);
+  // console.log("check comments", comments);
+  // console.log("check track", track);
   const [yourComment, setYourComment] = useState("");
   const handleSubmit = async () => {
     const res = await sendRequest<IBackendRes<ITrackComment>>({
