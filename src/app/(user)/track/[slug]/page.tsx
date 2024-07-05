@@ -3,7 +3,7 @@ import { useSearchParams } from "next/navigation";
 import WaveTrack from "@/components/track/wave.track";
 import { sendRequest } from "@/utils/api";
 import slugify from "slugify";
-
+import { notFound } from "next/navigation";
 import type { Metadata, ResolvingMetadata } from "next";
 import Container from "@mui/material/Container";
 
@@ -77,6 +77,9 @@ const DetailTrackPage = async (props: any) => {
   // // Extract comments array from the paginated response
   // const comments = commentsRes?.data?.result ?? null;
 
+  if (!trackRes?.data) {
+    notFound();
+  }
   return (
     <div>
       <Container>
