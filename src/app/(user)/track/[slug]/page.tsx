@@ -1,12 +1,12 @@
 import React from "react";
 import { useSearchParams } from "next/navigation";
 import WaveTrack from "@/components/track/wave.track";
-import { Container } from "@mui/material";
 import { sendRequest } from "@/utils/api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 import type { Metadata, ResolvingMetadata } from "next";
+import Container from "@mui/material/Container";
 
 type Props = {
   params: { slug: string };
@@ -28,6 +28,14 @@ export async function generateMetadata(
   return {
     title: trackRes.data?.title,
     description: trackRes.data?.description,
+    openGraph: {
+      title: "Tien Phuc SoundSloud",
+      description: "Beyond Your Coding Skills",
+      type: "website",
+      images: [
+        `https://res.cloudinary.com/dtbn1pdxz/image/upload/v1719462930/SHOPIT/avatars/ojbwoclp4xhmuwyhb5ro.jpg`,
+      ],
+    },
   };
 }
 

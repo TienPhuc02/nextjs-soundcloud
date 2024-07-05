@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "@mui/material";
+import Container from "@mui/material/Container";
 import UploadTabs from "@/components/track/upload.tabs";
 const UploadPage = () => {
   return (
