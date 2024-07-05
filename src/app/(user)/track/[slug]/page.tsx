@@ -16,8 +16,13 @@ export async function generateMetadata(
   { params, searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  console.log("check params slug", params.slug);
+  const temp = params?.slug?.split(".html") ?? [];
+  console.log(temp[0]);
+  const id = temp[0]?.split("-") ?? [];
+  console.log(id[id.length - 1]);
   const trackRes = await sendRequest<IBackendRes<ITrackTop>>({
-    url: `http://localhost:8000/api/v1/tracks/${params.slug}`,
+    url: `http://localhost:8000/api/v1/tracks/${id[id.length - 1]}`,
     method: "GET",
   });
 
@@ -42,14 +47,19 @@ export async function generateMetadata(
 
 const DetailTrackPage = async (props: any) => {
   const { params } = props;
+  console.log("check params slug", params.slug);
+  const temp = params?.slug?.split(".html") ?? [];
+  console.log(temp[0]);
+  const id = temp[0]?.split("-") ?? [];
+  console.log(id[id.length - 1]);
+
   // Fetch track details
   const trackRes = await sendRequest<IBackendRes<ITrackTop>>({
-    url: `http://localhost:8000/api/v1/tracks/${params.slug}`,
+    url: `http://localhost:8000/api/v1/tracks/${id[id.length - 1]}`,
     method: "GET",
     nextOption: { cache: "no-store" },
   });
 
-  
   // Fetch comments
   const commentsRes = await sendRequest<
     IBackendRes<IModelPaginate<ITrackComment>>
