@@ -5,4 +5,4 @@ export default withAuth({
     signIn: "/auth/signin",
   },
 });
-export const config = { matcher: ["/playlist", "/track/upload", "like"] };
+export const config = { matcher: ["/playlist", "/track/upload","/like"] };
